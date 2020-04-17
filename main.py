@@ -37,7 +37,7 @@ def main():
 			continue
 		else:
 			chosen_instrument = workbench.known_inst[int(selection)-1]
-			print("\nI see you have selected %s" % chosen_instrument.upper())
+			print("\nYou have selected %s" % chosen_instrument.upper())
 			response = input("Is this correct? [y]/n ")
 			if response.lower() == 'n':
 				continue

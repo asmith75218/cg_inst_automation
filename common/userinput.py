@@ -1,6 +1,6 @@
 class Userinput:
-	def __init__(self, response):
-		self.user_response = response
+	def __init__(self, user_input_string):
+		self.user_response = user_input_string
 		
 	def valid_range(self, nrange):
 		try:
@@ -18,3 +18,9 @@ class Userinput:
 			return len(self.user_response) >= nlen
 		else:
 			return len(self.user_response) == nlen
+			
+	def valid_name(self):
+		## TODO: name validation logic here
+		
+		# meanwhile, everything passes
+		return True
