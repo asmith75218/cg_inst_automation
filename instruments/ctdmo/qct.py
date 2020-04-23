@@ -11,7 +11,6 @@ def proc_qct(instrument):
 class Qct_ctdmo(Qct):
 	def __init__(self):
 		super().__init__()
-		# If some QCT will not have a form number, it goes in each instrument QCT
-		# rather than in the parent QCT class...
-# 		self.formnumber = common.set_formnumber()
+		
+		self.formnumber = "3305-00101-%s" % self.formnumber
 	pass
