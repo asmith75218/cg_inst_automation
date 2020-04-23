@@ -2,6 +2,44 @@ from . import userinput
 from serial import Serial
 from serial.tools import list_ports
 
+
+# Dynamic menu
+#
+#
+def dynamicmenu(msg, menuoptions, lastitem):
+	print("%s:" % msg)
+	menuid = []   # Dynamic menu...
+	for i, option in enumerate(menuoptions):
+		menuid.append(str(i+1))
+		print("%s) %s" % (menuid[i], option))
+	print("%s) %s" % (lastitem[0].upper(), lastitem.capitalize()))
+	selection = input("Enter your selection: ")
+	
+	if selection.lower() == lastitem[0].lower():
+		return None
+	elif selection in menuid:
+		return selection
+	else:
+		return 999
+
+def dynamicmenu_get(msg, menuoptions, lastitem="Back"):
+	while True:
+		selection = dynamicmenu(msg, menuoptions, lastitem)
+		if not selection:
+			break
+		elif selection == 999:
+			input("\nError! Unrecognized entry [Press ENTER to continue]...")
+			continue
+		else:
+			print("\nYou have selected %s" % menuoptions[int(selection)-1])
+			response = input("Is this correct? [y]/n ")
+			if response.lower() == 'n':
+				continue
+			else:
+				return int(selection) - 1
+
+	
+
 # Use this function to prompt the user for a name to use on forms and documents. It
 # has built-in input validation (see common/userinput.py for validation details).
 #
@@ -38,40 +76,27 @@ def set_formnumber(formnumber=None):
 
 # The following functions provide access to serial ports...
 #
-def serialport_menu(ports):
-	print("Select an available port:")
-	menuid = []   # Dynamic menu...
-	for i, port in enumerate(ports):
-		menuid.append(str(i+1))
-		print("%s) %s - %s" % (menuid[i], port.device, port.description))
-	print("B) Back")
-	selection = input("Enter your selection: ")
-	
-	if selection.lower() == 'b':
-		return None
-	elif selection in menuid:
-		return selection
-	else:
-		return 999
+# def serialport_menu(ports):
+# 	print("Select an available port:")
+# 	menuid = []   # Dynamic menu...
+# 	for i, port in enumerate(ports):
+# 		menuid.append(str(i+1))
+# 		print("%s) %s - %s" % (menuid[i], port.device, port.description))
+# 	print("B) Back")
+# 	selection = input("Enter your selection: ")
+# 	
+# 	if selection.lower() == 'b':
+# 		return None
+# 	elif selection in menuid:
+# 		return selection
+# 	else:
+# 		return 999
 
 def set_serialport():
 	ports = [port for port in list_ports.comports()]
-	
-	while True:
-		selection = serialport_menu(ports)
-		if not selection:
-			break
-		elif selection == 999:
-			input("\nError! Unrecognized entry [Press ENTER to continue]...")
-			continue
-		else:
-			chosen_port = ports[int(selection)-1]
-			print("\nYou have selected %s - %s" % (chosen_port.device, chosen_port.description))
-			response = input("Is this correct? [y]/n ")
-			if response.lower() == 'n':
-				continue
-			else:
-				return chosen_port
+	portmenu = ["%s - %s" % (port.device, port.description) for port in ports]
+	port_id = int(dynamicmenu_get("Select an available port", portmenu))
+	return ports[port_id]
 
 def serialport_open(port, baudrate):
 	"""Open connection to a serial port and start logging to a file."""
