@@ -1,4 +1,5 @@
-from . import userinput 
+from . import userinput
+from serial import Serial
 from serial.tools import list_ports
 
 # Use this function to prompt the user for a name to use on forms and documents. It
@@ -43,10 +44,10 @@ def serialport_menu(ports):
 	for i, port in enumerate(ports):
 		menuid.append(str(i+1))
 		print("%s) %s - %s" % (menuid[i], port.device, port.description))
-	print("X) Cancel")
+	print("B) Back")
 	selection = input("Enter your selection: ")
 	
-	if selection.lower() == 'x':
+	if selection.lower() == 'b':
 		return None
 	elif selection in menuid:
 		return selection
@@ -71,3 +72,14 @@ def set_serialport():
 				continue
 			else:
 				return chosen_port
+
+def serialport_open(port, baudrate):
+	"""Open connection to a serial port and start logging to a file."""
+	print("Connecting to %s at %d baud..." % (port, baudrate))
+	try:
+		ser = Serial(port[0], baudrate, timeout=5)
+		print("Connected to %s." % port)
+		return ser
+	except BaseException as msg:
+		input("\nError! %s [Press ENTER to continue]..." % msg)
+		return None

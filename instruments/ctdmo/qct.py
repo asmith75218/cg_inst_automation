@@ -10,7 +10,9 @@ def proc_qct(instrument):
 
 class Qct_ctdmo(Qct):
 	def __init__(self):
+		# Initialize shared Qct superclass attributes...
 		super().__init__()
 		
+		# Initialize or override ctdmo-specific attributes...
 		self.formnumber = "3305-00101-%s" % self.formnumber
 	pass
