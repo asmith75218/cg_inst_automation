@@ -12,7 +12,7 @@ def dynamicmenu(msg, menuoptions, lastitem):
 	for i, option in enumerate(menuoptions):
 		menuid.append(str(i+1))
 		print("%s) %s" % (menuid[i], option))
-	print("%s) %s" % (lastitem[0].upper(), lastitem.capitalize()))
+	print("%s) %s" % (lastitem[0].upper(), lastitem[1].capitalize()))
 	selection = input("Enter your selection: ")
 	
 	if selection.lower() == lastitem[0].lower():
@@ -22,7 +22,7 @@ def dynamicmenu(msg, menuoptions, lastitem):
 	else:
 		return 999
 
-def dynamicmenu_get(msg, menuoptions, lastitem="Back"):
+def dynamicmenu_get(msg, menuoptions, lastitem=('B', 'Go Back')):
 	while True:
 		selection = dynamicmenu(msg, menuoptions, lastitem)
 		if not selection:
@@ -73,29 +73,20 @@ def set_formnumber(formnumber=None):
 	# increment the form number...
 	return str(int(formnumber)+1).rjust(5, '0')
 
+# Common messages
+#
+#
+usercancelled = "\nOperation cancelled by user. [Press ENTER to continue]..."
 
 # The following functions provide access to serial ports...
 #
-# def serialport_menu(ports):
-# 	print("Select an available port:")
-# 	menuid = []   # Dynamic menu...
-# 	for i, port in enumerate(ports):
-# 		menuid.append(str(i+1))
-# 		print("%s) %s - %s" % (menuid[i], port.device, port.description))
-# 	print("B) Back")
-# 	selection = input("Enter your selection: ")
-# 	
-# 	if selection.lower() == 'b':
-# 		return None
-# 	elif selection in menuid:
-# 		return selection
-# 	else:
-# 		return 999
-
 def set_serialport():
 	ports = [port for port in list_ports.comports()]
 	portmenu = ["%s - %s" % (port.device, port.description) for port in ports]
-	port_id = int(dynamicmenu_get("Select an available port", portmenu))
+	try:
+		port_id = int(dynamicmenu_get("Select an available port", portmenu))
+	except TypeError:
+		return None
 	return ports[port_id]
 
 def serialport_open(port, baudrate):
