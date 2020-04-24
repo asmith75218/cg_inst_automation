@@ -1,4 +1,4 @@
-# from common import 
+from common import common
 
 # Available instrument types... -------------------------------
 import instruments
@@ -14,43 +14,17 @@ class Instrument:
 		
 	def explode(self):
 		print("Boom!")
-		
-	def mainmenu(self, proctypes):
-		print("\n")
-		print("-" * 17, "INSTRUMENT MENU: %s" % self.name.upper().ljust(7), "-" * 18)
-		print("Select a procedure:")
-		menuid = []
-		for i, proc in enumerate(proctypes):
-			menuid.append(str(i+1))
-			print("%s) %s" % (menuid[i], proc.upper()))
-		print("B) Go Back")
-	
-		selection = input("Enter your selection: ")
-	
-		if selection.lower() == 'b':
-			return None
-		elif selection in menuid:
-			return selection
-		else:
-			return 999
-	
+			
 	def select_proc(self):
 		while True:
-			selection = self.mainmenu(self.proctypes)
-			
-			if not selection:
+			header = ''.join(("\n", "-" * 17, "INSTRUMENT MENU: %s" % self.name.upper().ljust(7), "-" * 18))
+			proclist = [proc.upper() for proc in self.proctypes]
+			try:
+				proc_id = int(common.dynamicmenu_get("Select a procedure", proclist, header=header))
+			except TypeError:
 				break
-			elif selection == 999:
-				input("\nError! Unrecognized entry [Press ENTER to continue]...")
-				continue
 			else:
-				chosen_proc = self.proctypes[int(selection)-1]
-				print("\nYou have selected %s" % chosen_proc.upper())
-				response = input("Is this correct? [y]/n ")
-				if response.lower() == 'n':
-					continue
-				else:
-					getattr(self, chosen_proc)()
+				getattr(self, self.proctypes[proc_id])()
 	
 	
 

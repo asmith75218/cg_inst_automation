@@ -6,7 +6,8 @@ from serial.tools import list_ports
 # Dynamic menu
 #
 #
-def dynamicmenu(msg, menuoptions, lastitem):
+def dynamicmenu(msg, menuoptions, lastitem, header):
+	if header: print(header)
 	print("%s:" % msg)
 	menuid = []   # Dynamic menu...
 	for i, option in enumerate(menuoptions):
@@ -22,9 +23,9 @@ def dynamicmenu(msg, menuoptions, lastitem):
 	else:
 		return 999
 
-def dynamicmenu_get(msg, menuoptions, lastitem=('B', 'Go Back')):
+def dynamicmenu_get(msg, menuoptions, lastitem=('B', 'Go Back'), header=None):
 	while True:
-		selection = dynamicmenu(msg, menuoptions, lastitem)
+		selection = dynamicmenu(msg, menuoptions, lastitem, header)
 		if not selection:
 			break
 		elif selection == 999:
@@ -36,7 +37,7 @@ def dynamicmenu_get(msg, menuoptions, lastitem=('B', 'Go Back')):
 			if response.lower() == 'n':
 				continue
 			else:
-				return int(selection) - 1
+				return str(int(selection) - 1)
 
 	
 
