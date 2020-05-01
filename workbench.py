@@ -9,8 +9,10 @@ known_inst = [name for finder, name, ispkg in pkgutil.iter_modules(instruments._
 
 # High level instrument class for properties shared across instrument types
 class Instrument:
-	def __init__(self, name):
-		self.name = name
+	def __init__(self):
+# 	def __init__(self, name):
+# 		self.name = name
+		pass
 		
 	def explode(self):
 		print("Boom!")

@@ -15,4 +15,5 @@ class Qct_ctdmo(Qct):
 		
 		# Initialize or override ctdmo-specific attributes...
 		self.formnumber = "3305-00101-%s" % self.formnumber
+		
 	pass

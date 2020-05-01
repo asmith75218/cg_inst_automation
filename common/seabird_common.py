@@ -1,4 +1,4 @@
-from . import Serial_instrument
+from .serial_common import Serial_instrument
 
 class Seabird_instrument(Serial_instrument):
 	def __init__(self):

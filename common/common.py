@@ -1,6 +1,4 @@
 from . import userinput
-from serial import Serial
-from serial.tools import list_ports
 
 
 # Dynamic menu
@@ -79,24 +77,3 @@ def set_formnumber(formnumber=None):
 #
 usercancelled = "\nOperation cancelled by user. [Press ENTER to continue]..."
 
-# The following functions provide access to serial ports...
-#
-def set_serialport():
-	ports = [port for port in list_ports.comports()]
-	portmenu = ["%s - %s" % (port.device, port.description) for port in ports]
-	try:
-		port_id = int(dynamicmenu_get("Select an available port", portmenu))
-	except TypeError:
-		return None
-	return ports[port_id]
-
-def serialport_open(port, baudrate):
-	"""Open connection to a serial port and start logging to a file."""
-	print("Connecting to %s at %d baud..." % (port, baudrate))
-	try:
-		ser = Serial(port[0], baudrate, timeout=5)
-		print("Connected to %s." % port)
-		return ser
-	except BaseException as msg:
-		input("\nError! %s [Press ENTER to continue]..." % msg)
-		return None

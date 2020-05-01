@@ -46,9 +46,10 @@ def main():
 				# defining 'instrument' as an instance of instrument Class
 				# from that module. The Class name must be the Capitalized
 				# module name. This must be defined in the relevant module.
-				instmod = import_module('instruments.%s' % chosen_instrument)
-				instrclass = getattr(instmod, chosen_instrument.capitalize())
-				instrument = instrclass(chosen_instrument)
+				instrmod = import_module('instruments.%s' % chosen_instrument)
+				instrclass = getattr(instrmod, chosen_instrument.capitalize())
+# 				instrument = instrclass(chosen_instrument)
+				instrument = instrclass()
 				
 				# With an instrument defined, the available procedures will be
 				# presented dynamically by the workshop module, where one will
