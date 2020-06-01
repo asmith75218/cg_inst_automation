@@ -105,8 +105,10 @@ def set_formnumber(formnumber=None):
 	# increment the form number...
 	return str(int(formnumber)+1).rjust(5, '0')
 
-# Common messages
+# Common prompts and messages
 #
 #
-usercancelled = "\nOperation cancelled by user. [Press ENTER to continue]..."
+def usercancelled():
+	input("\nOperation cancelled by user. [Press ENTER to continue]...")
+	return
 

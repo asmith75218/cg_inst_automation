@@ -2,7 +2,7 @@ from common.seabird_common import Seabird_instrument
 from . import retire, qct
 
 class Ctdmo(Seabird_instrument):
-	# class variables common to all DUMMY
+	# class variables common to all CTDMO
 	proctypes = ['qct', 'retire']
 	name = "CTDMO"
 	
@@ -16,7 +16,9 @@ class Ctdmo(Seabird_instrument):
 		retire.proc_retire(self)
 		
 	def qct(self):
-		qct.proc_qct(self)
+		qct.init_qct(self)
 	# --------------------------
 	
 	
+	def connect(self):
+		self.port = self.set_serialport()

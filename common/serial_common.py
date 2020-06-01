@@ -1,6 +1,7 @@
 from serial import Serial
 from serial.tools import list_ports
 from workbench import Instrument
+from . import common
 
 class Serial_instrument(Instrument):
 	def __init__(self):
@@ -12,7 +13,7 @@ class Serial_instrument(Instrument):
 		ports = [port for port in list_ports.comports()]
 		portmenu = ["%s - %s" % (port.device, port.description) for port in ports]
 		try:
-			port_id = int(dynamicmenu_get("Select an available port", portmenu))
+			port_id = int(common.dynamicmenu_get("Select an available port", portmenu, lastitem=('C', 'Cancel')))
 		except TypeError:
 			return None
 		return ports[port_id]
