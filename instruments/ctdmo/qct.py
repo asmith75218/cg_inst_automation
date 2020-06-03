@@ -28,11 +28,11 @@ class Qct_ctdmo(Qct):
 		# Initialize or override ctdmo-specific attributes...
 		
 	def proc_qct(self, instrument):
-		instrument.connect()
-# 		if not instrument.port:
-# 			common.usercancelled()
-# 			return
+		while not instrument.connected():
+			if not instrument.connect():
+	 			common.usercancelled()
+	 			return
 		print("%s! We are the knights who say %s on %s!" % (self.header['username'], self.header['formnumber'], self.header['testdate']))
-		print("port: %s before close" % instrument.port)
-		instrument.ser.close()
-		print("port: %s after close" % instrument.port)
+		if not instrument.disconnect():
+			print("Error closing serial port!")
+		return

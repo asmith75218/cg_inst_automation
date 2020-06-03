@@ -5,10 +5,13 @@ class Ctdmo(Seabird_instrument):
 	# class variables common to all CTDMO
 	proctypes = ['qct', 'retire']
 	name = "CTDMO"
+	baudrate = 9600
+	timeout = 5
 	
 	def __init__(self):
 		# Initialize shared superclass attributes...
 		super().__init__()
+		
 
 	# these first definitions are for launching available procedures and should
 	# match the above proctypes
@@ -20,5 +23,3 @@ class Ctdmo(Seabird_instrument):
 	# --------------------------
 	
 	
-	def connect(self):
-		self.serialport_open(9600)
