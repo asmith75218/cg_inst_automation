@@ -15,15 +15,22 @@ class Serial_instrument(Instrument):
 		try:
 			port_id = int(common.dynamicmenu_get("Select an available port", portmenu, lastitem=('C', 'Cancel')))
 		except TypeError:
+			print("TypeError in set_serialport()")
 			return None
 		return ports[port_id]
 
-	def serialport_open(self, baudrate):
+	def serialport_open(self, baudrate, timeout=5):
 		"""Open connection to a serial port and start logging to a file."""
-		print("Connecting to %s at %d baud..." % (self.port, baudrate))
+		while True:
+			try:
+				print("Connecting to %s at %d baud..." % (self.port, baudrate))
+			except AttributeError:
+				self.port = self.set_serialport()
+				continue
+			break
 		try:
-			self.ser = Serial(self.port[0], baudrate, timeout=5)
-			print("Connected to %s." % self.port)
+			self.ser = Serial(self.port[0], baudrate, timeout)
 		except BaseException as msg:
 			input("\nError! %s [Press ENTER to continue]..." % msg)
 			return None
+		print("Connected to %s." % self.port)

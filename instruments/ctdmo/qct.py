@@ -29,8 +29,10 @@ class Qct_ctdmo(Qct):
 		
 	def proc_qct(self, instrument):
 		instrument.connect()
-		if not instrument.port:
-			common.usercancelled()
-			return
+# 		if not instrument.port:
+# 			common.usercancelled()
+# 			return
 		print("%s! We are the knights who say %s on %s!" % (self.header['username'], self.header['formnumber'], self.header['testdate']))
-	
+		print("port: %s before close" % instrument.port)
+		instrument.ser.close()
+		print("port: %s after close" % instrument.port)

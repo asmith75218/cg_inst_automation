@@ -21,4 +21,4 @@ class Ctdmo(Seabird_instrument):
 	
 	
 	def connect(self):
-		self.port = self.set_serialport()
+		self.serialport_open(9600)
