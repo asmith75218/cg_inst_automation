@@ -30,11 +30,13 @@ class Serial_instrument(Instrument):
 
 	def serialport_open(self):
 		"""Open connection to a serial port and start logging to a file."""
-		if not self.port:
+		while not self.port:
 			# No port chosen, try to choose one...
 			if not self.set_serialport():
-				# Cancelled by user...
-				return False
+				again = input("Would you like to try to connect again? y/[n] ")
+				if again.lower() != "y":
+					# Cancelled by user...
+					return False
 		try:
 			self.ser.open()
 		except BaseException as msg:
