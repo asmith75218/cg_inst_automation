@@ -12,6 +12,7 @@ class Serial_instrument(Instrument):
 		self.ser.baudrate = self.baudrate
 		self.ser.timeout = self.timeout
 		self.port = None
+		self.capfile = "Serial_instrument.log"	# Default should be overridden in instrument-specific module
 
 	def set_serialport(self):
 		ports = [port for port in list_ports.comports()]
@@ -44,6 +45,42 @@ class Serial_instrument(Instrument):
 			return False
 		print("Connected to %s." % self.port)
 		return True
+
+	def cap_cmd(self, cmd):
+		"""
+		Send a single commmand cmd to an instrument. Write the reply to the
+		capture file. If instrument echoes the command, the command will also
+		be captured.
+		"""
+		self.ser.reset_input_buffer()
+		self.ser.write((cmd + '\r\n').encode('ascii'))
+		buf = self.ser.read(self.ser.in_waiting).decode('ascii')
+		while True:
+			cur = buf
+			buf += self.ser.read(1).decode('ascii')
+			if cur == buf:
+				with open(self.capfile, 'a') as capfile:
+					capfile.write(buf)
+					return True
+
+	def cap_cmd_forceecho(self, cmd):
+		"""
+		Send a single commmand cmd to an instrument. Write the command and the
+		reply to the capture file separately. If instrument echoes the command,
+		the command be captured twice.
+		"""
+		with open(self.capfile, 'a') as capfile:
+			capfile.write(cmd + '\r\n')
+		self.ser.reset_input_buffer()
+		self.ser.write((cmd + '\r\n').encode('ascii'))
+		buf = self.ser.read(self.ser.in_waiting).decode('ascii')
+		while True:
+			cur = buf
+			buf += self.ser.read(1).decode('ascii')
+			if cur == buf:
+				with open(self.capfile, 'a') as capfile:
+					capfile.write(buf)
+					return True
 
 	def connect(self):
 		return self.serialport_open()
