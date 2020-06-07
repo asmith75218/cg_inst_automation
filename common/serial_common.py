@@ -1,3 +1,4 @@
+from datetime import datetime as dt
 from serial import Serial
 from serial.tools import list_ports
 from workbench import Instrument
@@ -13,7 +14,7 @@ class Serial_instrument(Instrument):
 		self.ser.timeout = self.timeout
 		self.port = None
 		self.capfile = "Serial_instrument.log"	# Default should be overridden in instrument-specific module
-		self.capfileheader = "== Serial_instrument Header ==\r\n"
+
 
 	def set_serialport(self):
 		ports = [port for port in list_ports.comports()]
@@ -46,6 +47,7 @@ class Serial_instrument(Instrument):
 			return False
 		print("Connected to %s." % self.port)
 		with open(self.capfile, "w") as capfile:
+			self.capfileheader = " ".join(("=" * 22, "Session log - %s" % dt.now().strftime("%Y/%m/%d %H:%M:%S"), "=" * 22, "\r\n"))
 			capfile.write(self.capfileheader)
 		return True
 

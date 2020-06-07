@@ -38,6 +38,7 @@ class Qct_ctdmo(Qct):
 	 			return True
 
 		print("Initializing host...")
+		instrument.cap_cmd("")
 		instrument.cap_cmd("gethd")
 		instrument.cap_cmd("getcd")
 		
@@ -46,7 +47,6 @@ class Qct_ctdmo(Qct):
 		instrument.cap_cmd("pwron")
 
 
-		instrument.cap_cmd_forceecho("%s! We are the knights who say %s on %s!" % (self.header['username'], self.header['formnumber'], self.header['testdate']))
 		if not instrument.disconnect():
 			print("Error closing serial port!")
 		return True
