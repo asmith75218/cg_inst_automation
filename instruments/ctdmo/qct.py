@@ -28,14 +28,14 @@ class Qct_ctdmo(Qct):
 		# Initialize or override ctdmo-specific attributes...
 		
 	def proc_qct(self, instrument):
+		# Specify a capture file...
+		instrument.capfile = "%s-A.txt" % self.header['docname']
+
 		# Open a serial (RS232) connection...
 		while not instrument.connected():
 			if not instrument.connect():
 	 			common.usercancelled()
 	 			return
-
-		# Specify a capture file...
-		instrument.capfile = "%s-A.txt" % self.header['docname']
 
 		instrument.cap_cmd_forceecho("%s! We are the knights who say %s on %s!" % (self.header['username'], self.header['formnumber'], self.header['testdate']))
 		if not instrument.disconnect():

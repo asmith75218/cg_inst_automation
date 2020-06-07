@@ -13,6 +13,7 @@ class Serial_instrument(Instrument):
 		self.ser.timeout = self.timeout
 		self.port = None
 		self.capfile = "Serial_instrument.log"	# Default should be overridden in instrument-specific module
+		self.capfileheader = "== Serial_instrument Header ==\r\n"
 
 	def set_serialport(self):
 		ports = [port for port in list_ports.comports()]
@@ -30,7 +31,7 @@ class Serial_instrument(Instrument):
 		return True
 
 	def serialport_open(self):
-		"""Open connection to a serial port and start logging to a file."""
+		"""Open connection to a serial port and initialize a log file."""
 		while not self.port:
 			# No port chosen, try to choose one...
 			if not self.set_serialport():
@@ -44,6 +45,8 @@ class Serial_instrument(Instrument):
 			input("\nError! %s [Press ENTER to continue]..." % msg)
 			return False
 		print("Connected to %s." % self.port)
+		with open(self.capfile, "w") as capfile:
+			capfile.write(self.capfileheader)
 		return True
 
 	def cap_cmd(self, cmd):
