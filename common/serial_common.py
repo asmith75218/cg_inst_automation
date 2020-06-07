@@ -58,35 +58,21 @@ class Serial_instrument(Instrument):
 		be captured.
 		"""
 		self.ser.reset_input_buffer()
-		self.ser.write((cmd + '\r\n').encode('ascii'))
+		self.send_cmd(cmd)
+		self.cap_buf()
+		return True
+
+	def send_cmd(self, cmd):
+		return self.ser.write((cmd + '\r\n').encode('ascii'))
+		
+	def read_reply(self):
 		self.buf = self.ser.read(self.ser.in_waiting).decode('ascii')
 		while True:
 			cur = self.buf
 			self.buf += self.ser.read(1).decode('ascii')
 			if cur == self.buf:
-				with open(self.capfile, 'a') as capfile:
-					capfile.write(self.buf)
-					return True
-
-	def cap_cmd_forceecho(self, cmd):
-		"""
-		Send a single commmand cmd to an instrument. Write the command and the
-		reply to the capture file separately. If instrument echoes the command,
-		the command be captured twice.
-		"""
-		with open(self.capfile, 'a') as capfile:
-			capfile.write(cmd + '\r\n')
-		self.ser.reset_input_buffer()
-		self.ser.write((cmd + '\r\n').encode('ascii'))
-		buf = self.ser.read(self.ser.in_waiting).decode('ascii')
-		while True:
-			cur = buf
-			buf += self.ser.read(1).decode('ascii')
-			if cur == buf:
-				with open(self.capfile, 'a') as capfile:
-					capfile.write(buf)
-					return True
-
+				return True
+		
 	def connect(self):
 		return self.serialport_open()
 	
@@ -96,3 +82,18 @@ class Serial_instrument(Instrument):
 	def disconnect(self):
 		self.ser.close()
 		return not self.ser.is_open
+		
+	def capfile_append(self, lines):
+		with open(self.capfile, 'a') as capfile:
+			capfile.write(lines)
+	
+	def buffer_empty(self):
+		if not self.ser.in_waiting:
+			return True
+		else:
+			return False
+	
+	def cap_buf(self):
+		self.read_reply()
+		self.capfile_append(self.buf)
+		return True
