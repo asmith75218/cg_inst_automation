@@ -35,9 +35,18 @@ class Qct_ctdmo(Qct):
 		while not instrument.connected():
 			if not instrument.connect():
 	 			common.usercancelled()
-	 			return
+	 			return True
+
+		print("Initializing host...")
+		instrument.cap_cmd("gethd")
+		instrument.cap_cmd("getcd")
+		
+		# ---- 8.3.5 ----
+		print("Waking the IMM...")
+		instrument.cap_cmd("pwron")
+
 
 		instrument.cap_cmd_forceecho("%s! We are the knights who say %s on %s!" % (self.header['username'], self.header['formnumber'], self.header['testdate']))
 		if not instrument.disconnect():
 			print("Error closing serial port!")
-		return
+		return True

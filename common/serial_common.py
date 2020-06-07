@@ -57,13 +57,13 @@ class Serial_instrument(Instrument):
 		"""
 		self.ser.reset_input_buffer()
 		self.ser.write((cmd + '\r\n').encode('ascii'))
-		buf = self.ser.read(self.ser.in_waiting).decode('ascii')
+		self.buf = self.ser.read(self.ser.in_waiting).decode('ascii')
 		while True:
-			cur = buf
-			buf += self.ser.read(1).decode('ascii')
-			if cur == buf:
+			cur = self.buf
+			self.buf += self.ser.read(1).decode('ascii')
+			if cur == self.buf:
 				with open(self.capfile, 'a') as capfile:
-					capfile.write(buf)
+					capfile.write(self.buf)
 					return True
 
 	def cap_cmd_forceecho(self, cmd):
