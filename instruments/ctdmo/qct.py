@@ -38,13 +38,13 @@ class Qct_ctdmo(Qct):
 	 			return True
 
 		print("Initializing host...")
-		instrument.cap_cmd("")
-		instrument.cap_cmd("gethd")
-		instrument.cap_cmd("getcd")
+		instrument.imm_poweron()
+		instrument.imm_cmd("gethd")
+		instrument.imm_cmd("getcd")
 		
 		# ---- 8.3.5 ----
 		print("Waking the IMM...")
-		instrument.cap_cmd("pwron")
+		instrument.imm_remote_wakeup()
 
 
 		if not instrument.disconnect():

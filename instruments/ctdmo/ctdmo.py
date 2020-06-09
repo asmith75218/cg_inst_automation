@@ -6,13 +6,15 @@ class Ctdmo(Seabird_instrument):
 	proctypes = ['qct', 'retire']
 	name = "CTDMO"
 	baudrate = 9600
-	timeout = 5
 	
 	def __init__(self):
+		# instance variables...
+		self.timeout = 5
+		self.imm_configtype = '1'
+
 		# Initialize shared superclass attributes...
 		super().__init__()
-		
-
+	
 	# these first definitions are for launching available procedures and should
 	# match the above proctypes
 	def retire(self):
