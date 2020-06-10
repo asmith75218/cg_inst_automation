@@ -37,10 +37,10 @@ class Qct_ctdmo(Qct):
 	 			common.usercancelled()
 	 			return True
 
-		print("Initializing host...")
+		# Establish communication with the IMM...
 		instrument.imm_poweron()
 		instrument.imm_cmd("gethd")
-		instrument.imm_cmd("getcd")
+		instrument.imm_setconfigtype(configtype='1', setenablebinarydata='0')
 		
 		# ---- 8.3.5 ----
 		print("Waking the IMM...")

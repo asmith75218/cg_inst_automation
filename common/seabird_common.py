@@ -1,4 +1,5 @@
 from .serial_common import Serial_instrument
+from . import common
 
 class Seabird_instrument(Serial_instrument):
 	def __init__(self):
@@ -22,28 +23,31 @@ class Seabird_instrument(Serial_instrument):
 		else: return False
 		
 	def imm_setconfigtype(self, configtype, **kwargs):
-	"""
-	Check the configtype of the IMM and set to the desired configtype if not already
-	set. The first param must be the desired configtype. This will reinitialize the
-	IMM. Any additional configurations desired may be passed in as optional keyword
-	value pairs.
+		"""
+		Check the configtype of the IMM and set to the desired configtype if not already
+		set. The first param must be the desired configtype. This will reinitialize the
+		IMM. Any additional configurations desired may be passed in as optional keyword
+		value pairs.
 	
-	Example: instrument.imm_setconfigtype(configtype='1', setenablebinarydata='0')
-	"""
+		Example: instrument.imm_setconfigtype(configtype='1', setenablebinarydata='0')
+		"""
 		# Determine the currently set configtype of the imm...
 		while True:
 			print("Verifying IMM configuration...")
 			self.imm_cmd('getcd')
 			configtypestr = "ConfigType='"
-			i = self.buf.find(configtypestr) + len(configtypestr)
-			current_configtype = self.buf[i]
+			i = self.buf.find(configtypestr)
+			if i < 0:	# For whatever reason, 'getcd' did not do what we expected...
+				if not common.usertryagain("Could not get IMM configtype."):
+					return False
+				else:	# If this was called before powering the IMM, etc., try again...
+					continue
+			current_configtype = self.buf[i + len(configtypestr)]
 		
 			# If different from intended configtype, change it...
 			if configtype != current_configtype:
 				print("Configuring IMM...")
-				self.cap_cmd('*INIT')
-				self.cap_cmd('*INIT')
-				self.imm_poweron()
+				self.imm_init()
 				self.cap_cmd('setconfigtype=%s' % configtype)
 				self.cap_cmd('setconfigtype=%s' % configtype)
 				self.imm_poweron()
@@ -52,13 +56,19 @@ class Seabird_instrument(Serial_instrument):
 				continue
 			return True
 
+	def imm_init(self):
+		self.cap_cmd('*INIT')
+		self.cap_cmd('*INIT')
+		return self.imm_poweron()
+		
 	def imm_cmd(self, cmd):
 		if self.imm_timedout():
 			self.imm_poweron()
-		self.cap_cmd(cmd)
+		return self.cap_cmd(cmd)
 		
 	def imm_remote_wakeup(self):
-		pass
+		return self.imm_cmd('pwron')
+		
 		
 	def imm_remote_cmd(self, cmd):
 		pass

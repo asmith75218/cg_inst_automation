@@ -111,4 +111,10 @@ def set_formnumber(formnumber=None):
 def usercancelled():
 	input("\nOperation cancelled by user. [Press ENTER to continue]...")
 	return
+	
+def usertryagain(msg):
+	response = input("\n%s Would you like to try again? [y]/n..." % msg)
+	if response.lower() == 'n':
+		return False
+	return True
 
