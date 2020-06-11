@@ -66,6 +66,8 @@ class Serial_instrument(Instrument):
 		return self.ser.write((cmd + '\r\n').encode('ascii'))
 		
 	def read_reply(self):
+		# Read incoming serial input and store in a buffer until no new bytes are
+		# received for duration of the timeout.
 		self.buf = self.ser.read(self.ser.in_waiting).decode('ascii')
 		while True:
 			cur = self.buf
@@ -73,27 +75,34 @@ class Serial_instrument(Instrument):
 			if cur == self.buf:
 				return True
 		
+	def cap_buf(self):
+		# Read serial input and append to the capture file.
+		self.read_reply()
+		self.capfile_append(self.buf)
+		return True
+
 	def connect(self):
+		# Wrapper to open a serial connection. Returns True or False.
 		return self.serialport_open()
 	
 	def connected(self):
+		# Wrapper to test for open serial port. Returns True of False.
 		return self.ser.is_open
 	
 	def disconnect(self):
+		# Wrapper to close a serial connection. Returns True or False.
 		self.ser.close()
 		return not self.ser.is_open
 		
 	def capfile_append(self, lines):
+		# Append text to a capture file. Pass text to append as lines.
 		with open(self.capfile, 'a') as capfile:
 			capfile.write(lines)
 	
 	def buffer_empty(self):
+		# Check for unread bytes in serial input buffer. Returns True of False.
 		if not self.ser.in_waiting:
 			return True
 		else:
 			return False
 	
-	def cap_buf(self):
-		self.read_reply()
-		self.capfile_append(self.buf)
-		return True
