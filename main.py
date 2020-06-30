@@ -1,11 +1,11 @@
-import workbench
+import instrumentbase
 from importlib import import_module
 
 def mainmenu():
 	"""
 	Displays the main menu for the program with header and list of instruments.
 	The instrument list is generated dynamically from a list of instruments that
-	are known to the workbench.py module.
+	are known to the instrumentbase.py module.
 	"""
 	print("\n")
 	print("-" * 20, "OOI CGSN INSTRUMENT", "-" * 20)
@@ -13,8 +13,8 @@ def mainmenu():
 	print(" " * 23, "Version 1.0a")
 	print("-" * 61)
 	print("Select an instrument:")
-	menuid = []   # Dynamic menu. See workbench module...
-	for i, inst in enumerate(workbench.known_inst):
+	menuid = []   # Dynamic menu. See instrumentbase module...
+	for i, inst in enumerate(instrumentbase.known_inst):
 		menuid.append(str(i+1))
 		print("%s) %s" % (menuid[i], inst.upper()))
 	print("Q) Quit")
@@ -36,7 +36,7 @@ def main():
 			input("\nError! Unrecognized entry [Press ENTER to continue]...")
 			continue
 		else:
-			chosen_instrument = workbench.known_inst[int(selection)-1]
+			chosen_instrument = instrumentbase.known_inst[int(selection)-1]
 			print("\nYou have selected %s" % chosen_instrument.upper())
 			response = input("Is this correct? [y]/n ")
 			if response.lower() == 'n':

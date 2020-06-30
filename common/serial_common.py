@@ -1,7 +1,7 @@
 from datetime import datetime as dt
 from serial import Serial
 from serial.tools import list_ports
-from workbench import Instrument
+from instrumentbase import Instrument
 from . import common
 
 class Serial_instrument(Instrument):
