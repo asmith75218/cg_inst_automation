@@ -1,6 +1,11 @@
 from .serial_common import Serial_instrument
 from . import common
 
+## This module shall contain functions/methods etc common to one or more Seabird
+## instruments. To access the serial driver, all functions etc must call the
+## serial_common module, NOT THE SERIAL DRIVER DIRECTLY. In this way, changes to
+## the serial driver will not require updates to this module.
+
 class Seabird_instrument(Serial_instrument):
 	def __init__(self):
 		# Initialize shared Instrument superclass attributes...
@@ -62,6 +67,10 @@ class Seabird_instrument(Serial_instrument):
 		return self.imm_poweron()
 		
 	def imm_cmd(self, cmd):
+		"""
+		Send a command to an IMM, checking first that the IMM has not timed out, or
+		waking it if it has.
+		"""
 		if self.imm_timedout():
 			self.imm_poweron()
 		return self.cap_cmd(cmd)
@@ -69,6 +78,17 @@ class Seabird_instrument(Serial_instrument):
 	def imm_remote_wakeup(self):
 		return self.imm_cmd('pwron')
 		
-		
+	def imm_get_remote_id(self):
+		while True:
+			self.imm_cmd('id?')
+			i = self.buf.find('id = ')
+			if i == -1:		# id not found in imm response...
+				if common.usertryagain("Unable to get remote id."):
+					continue
+				else:
+					return False
+			self.remote_id = self.buf[n+5:n+7]
+			return True
+	
 	def imm_remote_cmd(self, cmd):
 		pass

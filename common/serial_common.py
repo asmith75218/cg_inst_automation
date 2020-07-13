@@ -4,6 +4,14 @@ from serial.tools import list_ports
 from instrumentbase import Instrument
 from . import common
 
+## This module is for functions/methods etc shared by all serial instruments to
+## access the serial driver. Most if not everything in this module will include
+## calls to the serial driver module. NO FUNCTIONS IN ANY OTHER MODULE SHALL MAKE
+## CALLS TO THE SERIAL DRIVER MODULE. In this way, should the serial driver module
+## change in the future, only this common serial library will need to be updated.
+##
+## Serial driver module at time of writing is: pyserial 3.4
+
 class Serial_instrument(Instrument):
 	def __init__(self):
 		# Initialize shared Instrument superclass attributes...
