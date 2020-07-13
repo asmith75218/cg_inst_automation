@@ -81,14 +81,28 @@ class Seabird_instrument(Serial_instrument):
 	def imm_get_remote_id(self):
 		while True:
 			self.imm_cmd('id?')
-			i = self.buf.find('id = ')
-			if i == -1:		# id not found in imm response...
+			loc = self.buf.find('id = ')
+			if loc == -1:		# id not found in imm response...
 				if common.usertryagain("Unable to get remote id."):
 					continue
 				else:
 					return False
-			self.remote_id = self.buf[n+5:n+7]
+			self.remote_id = self.buf[loc+5:loc+7]
 			return True
+	
+	def imm_set_remote_id(self, ID):
+		i = 0
+		while True:
+			if not self.imm_get_remote_id():
+				return False				
+			if self.remote_id == ID:
+				return True
+			if i:
+				if not common.usertryagain("Failed to set remote id."):
+					return False					
+			self.cap_cmd('*id=%s' % ID)
+			self.cap_cmd('*id=%s' % ID)
+			i += 1
 	
 	def imm_remote_cmd(self, cmd):
 		pass
