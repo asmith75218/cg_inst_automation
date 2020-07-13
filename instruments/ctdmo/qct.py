@@ -53,9 +53,14 @@ class Qct_ctdmo(Qct):
 		# Set the instrument's IMM ID...
 		if not instrument.imm_set_remote_id(self.ID):
 			common.usercancelled()
+			self.results_text['8.3.5'] = "Failed to establish communication with instrument."
+			self.results_pass['8.3.5'] = False
 			return True
 		print("Remote id: %s" % instrument.remote_id)
 		
+		# Add step results to test results dictionaries...
+		self.results_text['8.3.5'] = "Established communication with instrument."
+		self.results_pass['8.3.5'] = True
 		
 		if not instrument.disconnect():
 			print("Error closing serial port!")
