@@ -61,6 +61,16 @@ class Qct_ctdmo(Qct):
 		# Add step results to test results dictionaries...
 		self.results_text['8.3.5'] = "Established communication with instrument."
 		self.results_pass['8.3.5'] = True
+
+		# ---- 8.3.7 ----
+		instrument.imm_cmd('#%soutputformat=1' % instrument.remote_id)
+		ds = instrument.imm_remote_reply_split('ds')
+		serialnumber = "37-%s" % ds[5]
+		firmware = ds[2]
+		print("Serial number: %s" % serialnumber)
+		print("Firmware version: %s" % firmware)
+
+
 		
 		if not instrument.disconnect():
 			print("Error closing serial port!")
