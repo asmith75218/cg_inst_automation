@@ -65,10 +65,16 @@ class Qct_ctdmo(Qct):
 		# ---- 8.3.7 ----
 		instrument.imm_cmd('#%soutputformat=1' % instrument.remote_id)
 		ds = instrument.imm_remote_reply_split('ds')
-		serialnumber = "37-%s" % ds[5]
-		firmware = ds[2]
-		print("Serial number: %s" % serialnumber)
-		print("Firmware version: %s" % firmware)
+		instrument.serialnumber = "37-%s" % ds[5]
+		instrument.firmware = ds[2]
+		print("Serial number: %s" % instrument.serialnumber)
+		print("Firmware version: %s" % instrument.firmware)
+
+		# Add step results to test results dictionaries...
+		self.results_text['8.3.7a'] = "Serial number confirmed."
+		self.results_pass['8.3.7a'] = True
+		self.results_text['8.3.7b'] = "Firmware %s confirmed." % instrument.firmware
+		self.results_pass['8.3.7b'] = True
 
 
 		
