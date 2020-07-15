@@ -22,6 +22,7 @@ def init_qct(instrument):
 class Qct_ctdmo(Qct):
 	# class variables common to all CTDMO QCT
 	ID = "01"   # Inductive ID will be reset to this for testing
+	INVENTORYCSV = "instruments/ctdmo/ctdmo_inv.csv"
 	
 	def __init__(self):
 		# Initialize shared Qct superclass attributes...
@@ -76,7 +77,14 @@ class Qct_ctdmo(Qct):
 		self.results_text['8.3.7b'] = "Firmware %s confirmed." % instrument.firmware
 		self.results_pass['8.3.7b'] = True
 
-
+		# Use serial number to look up series letter from a csv inventory file...
+		inventory_dict = common.dict_from_csv(self.INVENTORYCSV)
+		try:
+			instrument.seriesletter = inventory_dict[instrument.serialnumber]
+		except KeyError:
+			instrument.seriesletter = common.usertextselection("Enter the instrument Series (G, H, Q or R): ", "GgHhQqRr").upper()
+		print("Class/Series: CTDMO-%s" % instrument.seriesletter)
+		
 		
 		if not instrument.disconnect():
 			print("Error closing serial port!")

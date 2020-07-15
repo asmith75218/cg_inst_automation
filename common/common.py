@@ -1,5 +1,5 @@
 from . import userinput
-
+import csv
 
 # Dynamic menu
 #
@@ -118,3 +118,24 @@ def usertryagain(msg):
 		return False
 	return True
 
+# Use this function to prompt the user to enter some text and validate it against
+# validselections, which may be a string, list etc.
+def usertextselection(msg, validselections):
+	"""
+	Prompt the user to enter some text for validation. Parameters are msg: a text message
+	to display to the user, and validselections: the criteria for successful validation.
+	"""
+	while True:
+		selection = userinput.Userinput(input(msg))
+		if selection.valid_textselection(validselections):
+			return selection.user_response
+		else:
+			print("Invalid entry! Try again.")
+
+def dict_from_csv(csvfilename):
+	"""
+	Import and convert a csv file to a python dictionary. Each line in the csv should
+	be in the format "key, value".
+	"""
+	with open(csvfilename, 'r') as csvfile:
+		return dict(csv.reader(csvfile))
