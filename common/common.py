@@ -139,3 +139,7 @@ def dict_from_csv(csvfilename):
 	"""
 	with open(csvfilename, 'r') as csvfile:
 		return dict(csv.reader(csvfile))
+
+def partno_from_series(series_letter):
+	"""Return the numeric zero-padded part number for a given series letter"""
+	return str(ord(series_letter)-64).rjust(5, '0')

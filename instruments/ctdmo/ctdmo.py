@@ -6,6 +6,7 @@ class Ctdmo(Seabird_instrument):
 	proctypes = ['qct', 'retire']
 	name = "CTDMO"
 	baudrate = 9600
+	class_id = "1336-00001"
 	
 	def __init__(self):
 		# instance variables...

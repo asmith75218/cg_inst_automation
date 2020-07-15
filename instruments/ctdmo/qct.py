@@ -85,6 +85,9 @@ class Qct_ctdmo(Qct):
 			instrument.seriesletter = common.usertextselection("Enter the instrument Series (G, H, Q or R): ", "GgHhQqRr").upper()
 		print("Class/Series: CTDMO-%s" % instrument.seriesletter)
 		
+		# Use series letter to get part number...
+		instrument.part_no = "%s-%s" % (instrument.class_id, common.partno_from_series(instrument.seriesletter))
+		print("Part No.: %s" % instrument.part_no)
 		
 		if not instrument.disconnect():
 			print("Error closing serial port!")
