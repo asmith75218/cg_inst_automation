@@ -103,6 +103,10 @@ class Seabird_instrument(Serial_instrument):
 			self.cap_cmd('*id=%s' % ID)
 			self.cap_cmd('*id=%s' % ID)
 			i += 1
+
+	def imm_remote_reply(self, cmd):
+		self.imm_cmd('#%s%s' % (self.remote_id, cmd))
+		return self.buf
 	
 	def imm_remote_reply_split(self, cmd):
 		self.imm_cmd('#%s%s' % (self.remote_id, cmd))

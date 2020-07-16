@@ -1,5 +1,6 @@
 from common import common
 from common.qct_common import Qct
+from instruments.ctdmo import cal_ctdmo
 
 
 def init_qct(instrument):
@@ -89,6 +90,17 @@ class Qct_ctdmo(Qct):
 		instrument.part_no = "%s-%s" % (instrument.class_id, common.partno_from_series(instrument.seriesletter))
 		print("Part No.: %s" % instrument.part_no)
 		
+		# ---- 8.3.8 ----
+		print("Retrieving calibration information...")
+		cc = instrument.imm_remote_reply('getcc')
+
+		# Generate the calibration CSV...
+		print("Exporting calibration to CSV...")
+		cc_xml = cc[8:-2]
+		cal_ctdmo.export_csv(cc_xml, instrument.seriesletter, self.header['formnumber'])
+		
+
+
 		if not instrument.disconnect():
 			print("Error closing serial port!")
 		return True
