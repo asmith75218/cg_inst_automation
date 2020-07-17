@@ -112,5 +112,8 @@ class Seabird_instrument(Serial_instrument):
 		self.imm_cmd('#%s%s' % (self.remote_id, cmd))
 		return self.buf.split()
 
+	def imm_set_datetime(self, t):
+		return self.imm_cmd('#%sdatetime=%s' % (self.remote_id, t))
+
 	def imm_remote_cmd(self, cmd):
 		pass

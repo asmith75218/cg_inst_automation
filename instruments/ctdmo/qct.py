@@ -66,7 +66,7 @@ class Qct_ctdmo(Qct):
 
 		# ---- 8.3.7 ----
 		instrument.imm_cmd('#%soutputformat=1' % instrument.remote_id)
-		ds = instrument.imm_remote_reply_split('ds')
+		ds = instrument.imm_remote_reply('ds').split()
 		instrument.serialnumber = "37-%s" % ds[5]
 		instrument.firmware = ds[2]
 		print("Serial number: %s" % instrument.serialnumber)
@@ -99,6 +99,13 @@ class Qct_ctdmo(Qct):
 		cc_xml = cc[8:-2]
 		cal_ctdmo.export_csv(cc_xml, instrument.seriesletter, self.header['formnumber'])
 		
+		# ---- 8.3.9 ----
+		print("Testing instrument clock...")
+		for condition in ['noon', 'utc']:
+			if not instrument.clock_set_test(15, condition):
+				common.usercancelled()
+				return True
+			
 
 
 		if not instrument.disconnect():

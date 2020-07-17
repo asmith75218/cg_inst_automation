@@ -1,3 +1,4 @@
+from common import common
 from common.seabird_common import Seabird_instrument
 from . import retire, qct
 
@@ -26,3 +27,27 @@ class Ctdmo(Seabird_instrument):
 	# --------------------------
 	
 	
+	def get_time(self):
+		ds = self.imm_remote_reply('ds')
+		ds_date = ' '.join(ds.split()[6:10])
+		return common.formatdate(ds_date, '%d %b %Y %H:%M:%S')
+		
+	def clock_set_test(self, margin, setting='utc'):
+		while True:
+			if setting == 'noon':
+				print("Setting clock to noon yesterday...")
+				t1 = common.noon_yesterday()
+			elif setting == 'utc':
+				print("Setting clock to current time UTC...")
+				t1 = common.current_utc()
+			self.imm_set_datetime(common.formatdate(t1, 'sbe'))	
+			t2 = self.get_time()
+			if not common.compare_times_ordered(t1, t2, margin):
+				if common.usertryagain("""There was a problem setting the clock.
+										The reported time is %s. The expected time
+										is %s""" % (common.formatdate(t2, 'us'), common.formatdate(t1, 'us'))):
+					continue
+				else:
+					return False
+			else:
+				return True

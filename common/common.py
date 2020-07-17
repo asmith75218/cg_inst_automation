@@ -1,4 +1,6 @@
 from . import userinput
+from datetime import datetime as dt
+from datetime import timedelta
 import csv
 
 # Dynamic menu
@@ -105,7 +107,7 @@ def set_formnumber(formnumber=None):
 	# increment the form number...
 	return str(int(formnumber)+1).rjust(5, '0')
 
-# Common prompts and messages
+# ---------- Common prompts and messages ----------
 #
 #
 def usercancelled():
@@ -143,3 +145,39 @@ def dict_from_csv(csvfilename):
 def partno_from_series(series_letter):
 	"""Return the numeric zero-padded part number for a given series letter"""
 	return str(ord(series_letter)-64).rjust(5, '0')
+	
+# ---------- Time Functions ----------
+#
+#
+def compare_times_ordered(t1, t2, margin):
+	"""Test if t2 is within margin (seconds) after t1"""
+	return 0 <= (t2 - t1).seconds <= margin
+
+def compare_times_abs(t1, t2, margin):
+	"""Test if t1 and t2 are within +/- margin (seconds) of each other"""
+	return abs(t1 - t2).seconds <= margin
+	
+def noon_yesterday():
+	"""Return a datetime object for noon yesterday"""
+	return (dt.utcnow() - timedelta(days=1)).replace(hour=12, minute=0, second=0, microsecond=0)
+	
+def current_utc():
+	"""Return a datetime object for the current time UTC"""
+	return dt.utcnow()
+
+def formatdate(t, fmt):
+	"""
+	Returns a date formatted for use with a specific instrument, for human consumption, or
+	for use by python datetime library. If 't' is a datetime obj, and a formatted date
+	string is desired, use one of the 'fmt' options below. If a datetime object is desired
+	and 't' is a formatted date string, 'fmt' must match the appropriate formatter to
+	convert the string.
+	"""
+	if fmt == 'sbe':
+		return t.strftime('%m%d%Y%H%M%S')
+	elif fmt == 'iso':
+		return t.isoformat()
+	elif fmt == 'us':
+		return t.strftime('%m/%d/%Y %H:%M:%S')
+	else:
+		return dt.strptime(t, fmt)
