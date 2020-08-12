@@ -114,11 +114,21 @@ def usercancelled():
 	input("\nOperation cancelled by user. [Press ENTER to continue]...")
 	return
 	
+# When something goes wrong, use this function for the option to try again...
 def usertryagain(msg):
 	response = input("\n%s Would you like to try again? [y]/n..." % msg)
 	if response.lower() == 'n':
 		return False
 	return True
+
+# When test conditions are not met, use this function for the options to fail the step,
+# or pass the step anyway...
+def userpassanyway():
+	response = input("\nWould you like to accept the result and pass this step? y/[n]...")
+	if response.lower() == 'y':
+		return True
+	return False
+
 
 # Use this function to prompt the user to enter some text and validate it against
 # validselections, which may be a string, list etc.
@@ -175,9 +185,13 @@ def formatdate(t, fmt):
 	"""
 	if fmt == 'sbe':
 		return t.strftime('%m%d%Y%H%M%S')
+	elif fmt == 'suna':
+		return t.strftime('%Y/%m/%d %H:%M:%S')
 	elif fmt == 'iso':
 		return t.isoformat()
 	elif fmt == 'us':
 		return t.strftime('%m/%d/%Y %H:%M:%S')
+	elif fmt == 'filename':    # for use in txt doc filenames
+		return t.strftime('%Y%m%d%H%M%S')
 	else:
 		return dt.strptime(t, fmt)

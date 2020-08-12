@@ -70,6 +70,14 @@ class Serial_instrument(Instrument):
 		self.cap_buf()
 		return True
 
+	def get_cmd(self, cmd):
+		"""
+		Use this to send a command to an instrument using cap_cmd, then return
+		the contents of the reply buffer
+		"""
+		self.cap_cmd(cmd)
+		return self.buf
+	
 	def send_cmd(self, cmd):
 		return self.ser.write((cmd + '\r\n').encode('ascii'))
 		
