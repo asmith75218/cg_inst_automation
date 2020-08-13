@@ -49,4 +49,6 @@ def proc_deploy(instrument):
 	print(instrument.get_cfg())
 	
 	# End procedure...
+	if not instrument.disconnect():
+		print("Error closing serial port!")
 	return True
