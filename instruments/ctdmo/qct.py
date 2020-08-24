@@ -103,9 +103,20 @@ class Qct_ctdmo(Qct):
 		print("Testing instrument clock...")
 		for condition in ['noon', 'utc']:
 			if not instrument.clock_set_test(15, condition):
-				common.usercancelled()
-				return True
+				if not common.userpassanyway():
+					common.usercancelled()
+					return True
 			
+		# ---- 8.3.11 ----
+		print("Testing configuration...")
+		# change sample interval first to 120, then to 10...
+		for interval in ['120', '10']:
+			instrument.imm_remote_reply('sampleinterval=%s' % interval)
+			ds = instrument.imm_remote_reply('ds').split()
+			if ds[29] != interval:
+				if not common.userpassanyway():
+					common.usercancelled()
+					return True
 
 
 		if not instrument.disconnect():
