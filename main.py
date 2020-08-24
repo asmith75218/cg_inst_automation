@@ -1,4 +1,5 @@
 import instrumentbase
+from rma import rma
 from importlib import import_module
 
 def mainmenu():
@@ -17,11 +18,14 @@ def mainmenu():
 	for i, inst in enumerate(instrumentbase.known_inst):
 		menuid.append(str(i+1))
 		print("%s) %s" % (menuid[i], inst.upper()))
+	print("R) RMA and SHIPPING")
 	print("Q) Quit")
 	selection = input("Enter your selection: ")
 	
 	if selection.lower() == 'q':
 		return None
+	elif selection.lower() == 'r':
+		return 'rma'
 	elif selection in menuid:
 		return selection
 	else:
@@ -35,6 +39,8 @@ def main():
 		elif selection == 999:
 			input("\nError! Unrecognized entry [Press ENTER to continue]...")
 			continue
+		elif selection == 'rma':
+			rma.main()
 		else:
 			chosen_instrument = instrumentbase.known_inst[int(selection)-1]
 			print("\nYou have selected %s" % chosen_instrument.upper())
@@ -52,7 +58,7 @@ def main():
 				instrument = instrclass()
 				
 				# With an instrument defined, the available procedures will be
-				# presented dynamically by the workshop module, where one will
+				# presented dynamically by the instrumentbase module, where one will
 				# be chosen by the user and further actions will happen...
 				instrument.select_proc()
 			

@@ -77,12 +77,12 @@ def dynamicmenu_get(msg, menuoptions, lastitem=('B', 'Go Back'), header=None):
 # Use this function to prompt the user for a name to use on forms and documents. It
 # has built-in input validation (see common/userinput.py for validation details).
 #
-def set_username():
+def set_username(msg='Enter your name'):
 	"""
 	Prompt the user for a name to use on forms and documents.
 	"""
 	while True:
-		username = userinput.Userinput(input("\nEnter your name: "))
+		username = userinput.Userinput(input("\n%s: " % msg))
 		if username.valid_name():
 			return username.user_response
 		else:
