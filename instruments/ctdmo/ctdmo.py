@@ -43,9 +43,7 @@ class Ctdmo(Seabird_instrument):
 			self.imm_set_datetime(common.formatdate(t1, 'sbe'))	
 			t2 = self.get_time()
 			if not common.compare_times_ordered(t1, t2, margin):
-				if common.usertryagain("""There was a problem setting the clock.
-										The reported time is %s. The expected time
-										is %s""" % (common.formatdate(t2, 'us'), common.formatdate(t1, 'us'))):
+				if common.usertryagain("There was a problem setting the clock. The reported time is %s. The expected time is %s" % (common.formatdate(t2, 'us'), common.formatdate(t1, 'us'))):
 					continue
 				else:
 					return False

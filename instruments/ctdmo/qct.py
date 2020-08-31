@@ -13,7 +13,18 @@ def init_qct(instrument):
 	while True:
 		qct = Qct_ctdmo()
 		qct.init_header(FORMNUMBER, DOCNUMBER, USERNAME)
+		
+		# call test procedure...
 		qct.proc_qct(instrument)
+		
+		# test complete, generate results doc...
+		# TODO write function to generate the doc and replace below sreendump code
+		for key in qct.results_pass:
+			b = 'Pass' if qct.results_pass[key] else 'Fail'
+			print("%s %s: %s" % (key, b, qct.results_text[key]))
+		
+		# Prompt to test another instrument, which will incrememt tjhe form number
+		# and run the loop again...
 		again = input("Would you like to test another instrument? y/[n] ")
 		if again.lower() != "y":
 			return
@@ -102,22 +113,33 @@ class Qct_ctdmo(Qct):
 		# ---- 8.3.9 ----
 		print("Testing instrument clock...")
 		for condition in ['noon', 'utc']:
-			if not instrument.clock_set_test(15, condition):
+			if not instrument.clock_set_test(1, condition):
+				print("The instrument clock was not set to the expected time.")
 				if not common.userpassanyway():
+					self.results_text['8.3.9'] = "The sample interval was not set successfully."
+					self.results_pass['8.3.9'] = False
 					common.usercancelled()
 					return True
+		self.results_text['8.3.9'] = "The sample interval was not set successfully."
+		self.results_pass['8.3.9'] = True
 			
-		# ---- 8.3.11 ----
+		# ---- 8.3.11 - 8.3.12 ----
 		print("Testing configuration...")
+		current_steps = ['8.3.11', '8.3.12']
 		# change sample interval first to 120, then to 10...
-		for interval in ['120', '10']:
+		for i, interval in enumerate(['120', '10']):
 			instrument.imm_remote_reply('sampleinterval=%s' % interval)
 			ds = instrument.imm_remote_reply('ds').split()
 			if ds[29] != interval:
+				print("The sample interval was not set to the expected value.")
 				if not common.userpassanyway():
+					self.results_text[current_steps[i]] = "The sample interval was not set successfully."
+					self.results_pass[current_steps[i]] = False
 					common.usercancelled()
 					return True
-
+			self.results_text[current_steps[i]] = "The sample interval was set successfully."
+			self.results_pass[current_steps[i]] = True
+			
 
 		if not instrument.disconnect():
 			print("Error closing serial port!")
