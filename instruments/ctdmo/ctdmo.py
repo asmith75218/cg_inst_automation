@@ -13,6 +13,16 @@ class Ctdmo(Seabird_instrument):
 		# instance variables...
 		self.timeout = 5
 		self.imm_configtype = '1'
+		
+		# default validation min/max values for a sample, in air, at normal indoor conditions
+		self.sample_minmax = {
+			'c_min':'-0.01',
+			'c_max':'0.01',
+			't_min':'15',
+			't_max':'25',
+			'p_min':'-0.5',
+			'p_max':'0.5'
+		}
 
 		# Initialize shared superclass attributes...
 		super().__init__()
@@ -49,3 +59,12 @@ class Ctdmo(Seabird_instrument):
 					return False
 			else:
 				return True
+
+	def air_sample(self):
+		# 
+
+	def take_sample(self):
+		# Instruct a CTDMO to take a sample, parse the reply and return it as a dictionary
+		sample = self.imm_remote_reply('ts').split()
+		return {'date':sample[4], 'time':sample[5], 'sn':sample[0], 't':sample[1], 'c':sample[2], 'p':sample[3]}
+				

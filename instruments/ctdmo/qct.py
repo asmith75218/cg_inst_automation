@@ -139,7 +139,10 @@ class Qct_ctdmo(Qct):
 					return True
 			self.results_text[current_steps[i]] = "The sample interval was set successfully."
 			self.results_pass[current_steps[i]] = True
-			
+
+		# ---- 8.3.13 ----
+		print("Acquiring a sample...") #TODO complete this step... make loop for try again, etc
+		sample_in_air = instrument.take_sample()
 
 		if not instrument.disconnect():
 			print("Error closing serial port!")
