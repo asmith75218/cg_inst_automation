@@ -113,7 +113,7 @@ class Qct_ctdmo(Qct):
 		# ---- 8.3.9 ----
 		print("Testing instrument clock...")
 		for condition in ['noon', 'utc']:
-			if not instrument.clock_set_test(1, condition):
+			if not instrument.clock_set_test(5, condition):
 				print("The instrument clock was not set to the expected time.")
 				if not common.userpassanyway():
 					self.results_text['8.3.9'] = "The sample interval was not set successfully."
