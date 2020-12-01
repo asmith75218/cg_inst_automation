@@ -144,6 +144,17 @@ class Qct_ctdmo(Qct):
 		print("Acquiring a sample...") #TODO complete this step... make loop for try again, etc
 		sample_in_air = instrument.take_sample()
 
+		# Test for a valid sample date i.e. today...
+		if not common.compare_date_now(', '.join([sample_in_air[k] for k in ['date','time']]), '%d %b %Y, %H:%M:%S'):
+			print("The sample date is not today.")
+			if not common.userpassanyway():
+				self.results_text['8.3.13a'] = "The sample does not contain a vaild timestamp."
+				self.results_pass['8.3.13a'] = False
+				common.usercancelled()
+				return True
+		self.results_text['8.3.13a'] = "The sample contains a vaild timestamp."
+		self.results_pass['8.3.13a'] = True
+			
 		if not instrument.disconnect():
 			print("Error closing serial port!")
 		return True

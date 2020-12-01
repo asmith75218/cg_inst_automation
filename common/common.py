@@ -167,6 +167,10 @@ def compare_times_abs(t1, t2, margin):
 	"""Test if t1 and t2 are within +/- margin (seconds) of each other"""
 	return abs(t1 - t2).seconds <= margin
 	
+def compare_date_now(d, fmt):
+	"""Test if date d is today"""
+	return formatdate(d, fmt).date() == dt.utcnow().date()
+	
 def noon_yesterday():
 	"""Return a datetime object for noon yesterday"""
 	return (dt.utcnow() - timedelta(days=1)).replace(hour=12, minute=0, second=0, microsecond=0)

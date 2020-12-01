@@ -62,8 +62,8 @@ class Ctdmo(Seabird_instrument):
 
 	def take_sample(self):
 		# Instruct a CTDMO to take a sample, parse the reply and return it as a dictionary
-		sample = self.imm_remote_reply('ts')
-		print(sample.splitlines()[1])
-		sample = sample.split()
+		sample = self.imm_remote_reply('ts').splitlines()[1]
+		print(sample)
+		sample = [s.strip() for s in sample.split(',')]
 		return {'date':sample[4], 'time':sample[5], 'sn':sample[0], 't':sample[1], 'c':sample[2], 'p':sample[3]}
 				
