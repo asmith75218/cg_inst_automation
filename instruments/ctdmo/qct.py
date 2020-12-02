@@ -154,6 +154,17 @@ class Qct_ctdmo(Qct):
 				return True
 		self.results_text['8.3.13a'] = "The sample contains a vaild timestamp."
 		self.results_pass['8.3.13a'] = True
+		
+		# Overly simple sample range test...
+		if not instrument.sample_range_test(sample_in_air):
+			if not common.userpassanyway():
+				self.results_text['8.3.13b'] = "The sample data appear invalid."
+				self.results_pass['8.3.13b'] = False
+				common.usercancelled()
+				return True
+		self.results_text['8.3.13b'] = "The sample data appear to be valid."
+		self.results_pass['8.3.13b'] = True
+			
 			
 		if not instrument.disconnect():
 			print("Error closing serial port!")

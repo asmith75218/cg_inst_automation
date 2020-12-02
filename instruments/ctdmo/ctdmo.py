@@ -18,8 +18,8 @@ class Ctdmo(Seabird_instrument):
 		self.sample_minmax = {
 			'c_min':'-0.01',
 			'c_max':'0.01',
-			't_min':'15',
-			't_max':'25',
+			't_min':'17',
+			't_max':'23',
 			'p_min':'-0.5',
 			'p_max':'0.5'
 		}
@@ -66,4 +66,15 @@ class Ctdmo(Seabird_instrument):
 		print(sample)
 		sample = [s.strip() for s in sample.split(',')]
 		return {'date':sample[4], 'time':sample[5], 'sn':sample[0], 't':sample[1], 'c':sample[2], 'p':sample[3]}
-				
+	
+	def sample_range_test(self, sample):
+		# Test sample values are within predefined min/max range...
+		result = True
+		params = {'t':'temperature', 'c':'conductivity', 'p':'pressure'}
+		sample = {key:value for key, value in sample.items() if key in params.keys()}
+		for item in sample.items():
+			min, max = [self.sample_minmax[key] for key in ['%s_min' % item[0], '%s_max' % item[0]]]
+			if not float(min) < float(item[1]) < float(max):
+				print("The %s value '%s' appears to be out of range!" % (params[item[0]], item[1]))
+				result = False
+		return result
