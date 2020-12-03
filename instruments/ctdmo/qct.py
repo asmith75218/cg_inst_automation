@@ -64,17 +64,12 @@ class Qct_ctdmo(Qct):
 		# ---- 8.3.6 ----
 		print("Establishing communication...")
 		# Set the instrument's IMM ID...
-		if not instrument.imm_set_remote_id(self.ID):
-			common.usercancelled()
-			self.results_text['8.3.5'] = "Failed to establish communication with instrument."
-			self.results_pass['8.3.5'] = False
-			return True
+		self.test_step('8.3.5',
+						instrument.imm_set_remote_id(self.ID),
+						'Established communication with instrument.',
+						'Failed to establish communication with instrument.')
 		print("Remote id: %s" % instrument.remote_id)
 		
-		# Add step results to test results dictionaries...
-		self.results_text['8.3.5'] = "Established communication with instrument."
-		self.results_pass['8.3.5'] = True
-
 		# ---- 8.3.7 ----
 		instrument.imm_cmd('#%soutputformat=1' % instrument.remote_id)
 		ds = instrument.imm_remote_reply('ds').split()
@@ -112,16 +107,11 @@ class Qct_ctdmo(Qct):
 		
 		# ---- 8.3.9 ----
 		print("Testing instrument clock...")
-		for condition in ['noon', 'utc']:
-			if not instrument.clock_set_test(5, condition):
-				print("The instrument clock was not set to the expected time.")
-				if not common.userpassanyway():
-					self.results_text['8.3.9'] = "The sample interval was not set successfully."
-					self.results_pass['8.3.9'] = False
-					common.usercancelled()
-					return True
-		self.results_text['8.3.9'] = "The sample interval was not set successfully."
-		self.results_pass['8.3.9'] = True
+		self.test_step('8.3.9',
+						instrument.clock_set_test(5, ['noon', 'utc']),
+						'The clock was set successfully.',
+						'The clock was not set successfully.',
+						'The instrument clock was not set to the expected time.')
 			
 		# ---- 8.3.11 - 8.3.12 ----
 		print("Testing configuration...")
@@ -130,42 +120,37 @@ class Qct_ctdmo(Qct):
 		for i, interval in enumerate(['120', '10']):
 			instrument.imm_remote_reply('sampleinterval=%s' % interval)
 			ds = instrument.imm_remote_reply('ds').split()
-			if ds[29] != interval:
-				print("The sample interval was not set to the expected value.")
-				if not common.userpassanyway():
-					self.results_text[current_steps[i]] = "The sample interval was not set successfully."
-					self.results_pass[current_steps[i]] = False
-					common.usercancelled()
-					return True
-			self.results_text[current_steps[i]] = "The sample interval was set successfully."
-			self.results_pass[current_steps[i]] = True
+			self.test_step( current_steps[i],
+							ds[29] == interval,
+							'The sample interval was set successfully.',
+							'The sample interval was not set successfully.',
+							'The sample interval was not set to the expected value!')
 
 		# ---- 8.3.13 ----
 		print("Acquiring a sample...") #TODO complete this step... make loop for try again, etc
 		sample_in_air = instrument.take_sample()
-
 		# Test for a valid sample date i.e. today...
-		if not common.compare_date_now(', '.join([sample_in_air[k] for k in ['date','time']]), '%d %b %Y, %H:%M:%S'):
-			print("The sample date is not today.")
-			if not common.userpassanyway():
-				self.results_text['8.3.13a'] = "The sample does not contain a vaild timestamp."
-				self.results_pass['8.3.13a'] = False
-				common.usercancelled()
-				return True
-		self.results_text['8.3.13a'] = "The sample contains a vaild timestamp."
-		self.results_pass['8.3.13a'] = True
-		
+		self.test_step('8.3.13a',
+						common.compare_date_now(', '.join([sample_in_air[k] for k in ['date','time']]), '%d %b %Y, %H:%M:%S'),
+						'The sample contains a vaild timestamp.',
+						'The sample does not contain a vaild timestamp.',
+						'The sample date is not today!')
 		# Overly simple sample range test...
-		if not instrument.sample_range_test(sample_in_air):
-			if not common.userpassanyway():
-				self.results_text['8.3.13b'] = "The sample data appear invalid."
-				self.results_pass['8.3.13b'] = False
-				common.usercancelled()
-				return True
-		self.results_text['8.3.13b'] = "The sample data appear to be valid."
-		self.results_pass['8.3.13b'] = True
+		self.test_step('8.3.13b',
+						instrument.sample_range_test(sample_in_air),
+						'The sample data appear to be valid.',
+						'The sample data appear invalid.')
 			
-			
+		# ---- 8.3.16 ----
+		print("Place the instrument in a container of warm water now.")
+		input("Press ENTER to continue...")
+		print("Acquiring a sample...")
+		sample_in_bucket = instrument.take_sample()
+		self.test_step('8.3.16',
+						instrument.sample_compare_increase(sample_in_bucket, sample_in_air, 'tp'),
+						'The sample data appear to be valid.',
+						'The sample data appear invalid.')
+
 		if not instrument.disconnect():
 			print("Error closing serial port!")
 		return True

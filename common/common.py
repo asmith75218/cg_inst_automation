@@ -123,7 +123,9 @@ def usertryagain(msg):
 
 # When test conditions are not met, use this function for the options to fail the step,
 # or pass the step anyway...
-def userpassanyway():
+def userpassanyway(alert=None):
+	if alert:
+		print(alert)
 	response = input("\nWould you like to accept the result and pass this step? y/[n]...")
 	if response.lower() == 'y':
 		return True
