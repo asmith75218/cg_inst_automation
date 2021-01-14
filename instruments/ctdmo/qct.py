@@ -1,6 +1,6 @@
 from common import common
 from common.qct_common import Qct
-from instruments.ctdmo import cal_ctdmo
+from instruments.ctdmo import cal_ctdmo, doc_ctdmo
 
 
 def init_qct(instrument):
@@ -17,17 +17,21 @@ def init_qct(instrument):
 		# call test procedure...
 		qct.proc_qct(instrument)
 		
-		# test complete, generate results doc...
-		# TODO write function to generate the doc and replace below sreendump code
+		# test complete, display results to screen...
 		for key in qct.results_pass:
 			b = 'Pass' if qct.results_pass[key] else 'Fail'
 			print("%s %s: %s" % (key, b, qct.results_text[key]))
+		# Generate the results document...
+		print("Generating results document...")
+		doc_ctdmo.qct_to_doc(instrument, qct)
+		print("Test complete!\r\n")
 		
-		# Prompt to test another instrument, which will incrememt tjhe form number
+		# Prompt to test another instrument, which will increment the form number
 		# and run the loop again...
 		again = input("Would you like to test another instrument? y/[n] ")
 		if again.lower() != "y":
 			return
+		print("Connect the next instrument now.")
 		input("Type ENTER to begin the next test...")
 		FORMNUMBER = common.set_formnumber(FORMNUMBER)
 		
@@ -105,9 +109,9 @@ class Qct_ctdmo(Qct):
 		cc_xml = cc[8:-2]
 		cal_ctdmo.export_csv(cc_xml, instrument.seriesletter, self.header['formnumber'])
 		
-		# ---- 8.3.9 ----
+		# ---- 8.3.10 ----
 		print("Testing instrument clock...")
-		self.test_step('8.3.9',
+		self.test_step('8.3.10',
 						instrument.clock_set_test(5, ['noon', 'utc']),
 						'The clock was set successfully.',
 						'The clock was not set successfully.',

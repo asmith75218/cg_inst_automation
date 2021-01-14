@@ -29,7 +29,7 @@ def write_cal_file(root, serial_no, filename, source_file):
     # Separate temperature, conductivity and pressure from XML...
     t, c, p = iter(root.findall('Calibration'))
     # Make a new file and write out the rows...
-    with open('%s.csv' % filename, 'w', newline='') as cal_file:
+    with open('save/%s.csv' % filename, 'w', newline='') as cal_file:
         writer = csv.writer(cal_file)
         writer.writerow(["serial", "name","value","notes"])
         writer.writerow([serial_no, "CC_a0", t.find('A0').text,source_file])
