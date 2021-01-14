@@ -44,7 +44,7 @@ class Qct_ctdmo(Qct):
 		
 	def proc_qct(self, instrument):
 		# Specify a capture file...
-		instrument.capfile = "%s-A.txt" % self.header['docname']
+		instrument.capfile = "save/%s-A.txt" % self.header['docname']
 
 		# Open a serial (RS232) connection...
 		while not instrument.connected():
