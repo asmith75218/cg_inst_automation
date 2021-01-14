@@ -81,15 +81,11 @@ class Ctdmo(Seabird_instrument):
 				result = False
 		return result	
 
-	def sample_compare_increase(self, sample2, sample1, params):
-		# Test sample values increased for specified parameters ...
+	def sample_compare_increase(self, sample1, sample2, label):
+		# Test if sample increased...
 		result = True
-		param_names = {'t':'temperature', 'c':'conductivity', 'p':'pressure'}
-		sample1 = {key:value for key, value in sample1.items() if key in params}
-		sample2 = {key:value for key, value in sample2.items() if key in params}
-		for item in sample2.items():
-			print('Testing %s <= %s...' % (item[1], sample1[item[0]]))
-			if not float(item[1]) >= float(sample1[item[0]]):
-				print("The %s value did not increase as expected!" % param_names[item[0]])
-				result = False
+		print('Testing %s <= %s...' % (sample1, sample2))
+		if not float(sample2) >= float(sample1):
+			print("The %s value did not increase as expected!" % label)
+			result = False
 		return result

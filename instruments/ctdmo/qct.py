@@ -141,15 +141,19 @@ class Qct_ctdmo(Qct):
 						'The sample data appear to be valid.',
 						'The sample data appear invalid.')
 			
-		# ---- 8.3.16 ----
+		# ---- 8.3.15 - 8.3.16 ----
 		print("Place the instrument in a container of warm water now.")
 		input("Press ENTER to continue...")
 		print("Acquiring a sample...")
 		sample_in_bucket = instrument.take_sample()
+		self.test_step('8.3.15',
+						instrument.sample_compare_increase(sample_in_air['p'], sample_in_bucket['p'], 'pressure'),
+						'The pressure data appear to be valid.',
+						'The pressure data appear invalid.')
 		self.test_step('8.3.16',
-						instrument.sample_compare_increase(sample_in_bucket, sample_in_air, 'tp'),
-						'The sample data appear to be valid.',
-						'The sample data appear invalid.')
+						instrument.sample_compare_increase(sample_in_air['t'], sample_in_bucket['t'], 'temperature'),
+						'The temperature data appear to be valid.',
+						'The temperature data appear invalid.')
 
 		if not instrument.disconnect():
 			print("Error closing serial port!")
