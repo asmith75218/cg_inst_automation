@@ -1,0 +1,8 @@
+name: instruments
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python>=3.7
+  - python-docx
+  - pyserial
