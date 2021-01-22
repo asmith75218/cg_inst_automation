@@ -4,7 +4,7 @@ from common import common
 import instruments
 import pkgutil
 
-known_inst = [name for finder, name, ispkg in pkgutil.iter_modules(instruments.__path__)]
+known_inst = [name for finder, name, ispkg in pkgutil.iter_modules(instruments.__path__) if not name.startswith('_')]
 # -------------------------------------------------------------
 
 # High level instrument class for properties shared across instrument types
