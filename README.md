@@ -90,11 +90,14 @@ program's interactive menus.
 
 #### The __init__.py file
 
-The `__init__.py` file must be present in the new instrument's directory. Edit this file,
-replacing `{instrument}` with the name of the instrument, as above. Replace
-`{Instrument}`, capitalizing the first letter.
+The **__init__.py** file must be present in the new instrument's directory. Edit this
+file's contents, replacing `{instrument}` with the name of the instrument, as above.
+Replace `{Instrument}`, capitalizing the first letter.
 
 #### The _inst_template.py file
+
+Rename the **_inst_template.py** file exactly as you named the package, e.g. `dosta.py`
+for a DOSTA instrument.
 
 To access the program's common code, uncomment the `common` and `instrumentbase` import
 statements...
