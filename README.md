@@ -1,6 +1,7 @@
 ## Installation using Anaconda and Git
 
 Using *Anaconda Prompt* (Windows) or *Terminal* (Mac)...
+
     > git clone https://github.com/asmith-whoi/cg_inst_automation.git
 
 A new folder will be created with the required files and folder structure.
@@ -40,14 +41,14 @@ Templates for both are located in the **cg_inst_automation/instruments** folder.
 
 
 
-###The module template
+### The module template
 
 Duplicate **_inst_mod_template.py** and rename it to {instrument}.py with the name of the
 instrument, e.g. `dosta.py` for a DOSTA instrument. Use all lower case letters, with no
 spaces. The name you give the file will be used to automatically generate the program's
 interactive menus.
 
-####Common code
+#### Common code
 
 To access the program's common code, uncomment the `common` and `instrumentbase` import
 statements...
@@ -63,11 +64,12 @@ with the name of the desired subclass...
 
 Define a new class for the new instrument. Uncomment the following lines, and replace
 `_Template` with the name of the instrument, *exactly as you named the file* with the
-first letter capitalized, e.g. `class Dosta({subclass}_instrument)` for a DOSTA
-instrument. Replace `{subclass}` exactly as in the above import statement...
+first letter capitalized, e.g. `class Dosta(Instrument)` for a DOSTA instrument. If you
+chose to make the new instrument part of an existing subclass above, replace `Instrument` 
+with the subclass name as used in the import statement...
 
 ```python
-class _Template({subclass}_instrument):
+class _Template(Instrument):
     # class variables common to all {instrument}
     proctypes = ['{proc1}', '{proc2}'...]
 ```
@@ -79,20 +81,20 @@ with the names of these procedures.
 Add your code to define these procedures as methods of the new class.
 
 
-###The package template
+### The package template
 
 Duplicate the **_inst_pkg_template** directory and rename it to `{instrument}` with the
 name of the instrument, e.g. `dosta` for a DOSTA instrument. Use all lower case letters,
 with no spaces. The name you give the directory will be used to automatically generate the
 program's interactive menus.
 
-####The __init__.py file
+#### The __init__.py file
 
 The `__init__.py` file must be present in the new instrument's directory. Edit this file,
 replacing `{instrument}` with the name of the instrument, as above. Replace
 `{Instrument}`, capitalizing the first letter.
 
-####The _inst_template.py file
+#### The _inst_template.py file
 
 To access the program's common code, uncomment the `common` and `instrumentbase` import
 statements...
@@ -108,11 +110,12 @@ with the name of the desired subclass...
 
 Define a new class for the new instrument. Uncomment the following lines, and replace
 `_Template` with the name of the instrument, *exactly as you named the file* with the
-first letter capitalized, e.g. `class Dosta({subclass}_instrument)` for a DOSTA
-instrument. Replace `{subclass}` exactly as in the above import statement...
+first letter capitalized, e.g. `class Dosta(Instrument)` for a DOSTA instrument. If you
+chose to make the new instrument part of an existing subclass above, replace `Instrument` 
+with the subclass name as used in the import statement...
 
 ```python
-class _Template({subclass}_instrument):
+class _Template(Instrument):
     # class variables common to all {instrument}
     proctypes = ['{proc1}', '{proc2}'...]
 ```
