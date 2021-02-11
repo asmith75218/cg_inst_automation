@@ -1,6 +1,6 @@
 # from common import common
-# from common.{subclass}_common import {subclass}_instrument
 # from instrumentbase import Instrument
+# from common.{subclass}_common import {subclass}_instrument
 # 
 # class _Template({subclass}_instrument):
 # 	# class variables common to all {instrument}
