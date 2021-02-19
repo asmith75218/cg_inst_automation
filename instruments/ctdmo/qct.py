@@ -97,7 +97,7 @@ class Qct_ctdmo(Qct):
 		print("Class/Series: CTDMO-%s" % instrument.seriesletter)
 		
 		# Use series letter to get part number...
-		instrument.part_no = "%s-%s" % (instrument.class_id, common.partno_from_series(instrument.seriesletter))
+		instrument.part_no = "%s-%s" % (instrument.class_id, common.cgpartno_from_series(instrument.seriesletter))
 		print("Part No.: %s" % instrument.part_no)
 		
 		# ---- 8.3.8 ----
