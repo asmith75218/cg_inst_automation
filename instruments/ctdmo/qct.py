@@ -6,7 +6,7 @@ from instruments.ctdmo import cal_ctdmo, doc_ctdmo
 def init_qct(instrument):
 	# COMMON VARIABLES
 	USERNAME = common.set_username()        # Test conductor name (entered by user)
-	FORMNUMBER = common.set_formnumber()    # QCT sequential form number (or starting number)
+	FORMNUMBER = common.set_cgformnumber()    # QCT sequential form number (or starting number)
 	DOCNUMBER = "3305-00101"                # QCT document number
 	
 	# Main test loop...
@@ -33,7 +33,7 @@ def init_qct(instrument):
 			return
 		print("Connect the next instrument now.")
 		input("Type ENTER to begin the next test...")
-		FORMNUMBER = common.set_formnumber(FORMNUMBER)
+		FORMNUMBER = common.set_cgformnumber(FORMNUMBER)
 		
 class Qct_ctdmo(Qct):
 	# class variables common to all CTDMO QCT

@@ -94,7 +94,7 @@ def set_username(msg='Enter your name'):
 # documents. It has built-in input validation (see common/userinput.py for
 # validation details).
 #
-def set_formnumber(formnumber=None):
+def set_cgformnumber(formnumber=None):
 	"""Prompt the user for a form number, or increment it if it already exists."""
 	while not formnumber:
 		# Prompt user and test for valid input...
