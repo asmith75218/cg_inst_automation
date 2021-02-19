@@ -37,6 +37,6 @@
 
 #### OOI and CGSN Special features
 
-<pre>common.<b>set_cgformnumber</b>(formnumber=None)</pre>
+<span style='font-family: monospace, monospace'>common.<b>set_cgformnumber</b>(formnumber=None)</span>
 
-<pre>common.<b>cgpartno_from_series</b>(series_letter)</pre>
+<span style='font-family: monospace, monospace'>common.<b>cgpartno_from_series</b>(series_letter)</span>
