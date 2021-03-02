@@ -72,10 +72,11 @@ class Qct_ctdmo(Qct):
 						instrument.imm_set_remote_id(self.ID),
 						'Established communication with instrument.',
 						'Failed to establish communication with instrument.')
-		print("Remote id: %s" % instrument.remote_id)
+		print("Remote id: %s" % instrument.remote_id)		
 		
 		# ---- 8.3.7 ----
 		instrument.imm_cmd('#%soutputformat=1' % instrument.remote_id)
+		instrument.imm_cmd('#%soutputexecutedtag=n' % instrument.remote_id)
 		ds = instrument.imm_remote_reply('ds').split()
 		instrument.serialnumber = "37-%s" % ds[5]
 		instrument.firmware = ds[2]
