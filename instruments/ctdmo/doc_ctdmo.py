@@ -4,7 +4,7 @@ from docx import Document
 
 def qct_to_doc(instrument, qct):
 	# Open the results template...
-	doc = Document('templates/3305-00101-00000.docx')
+	doc = Document('templates/3305-00101-v203.docx')
 
 	# Calling doc.tables will return all tables in the template, where all
 	# text will go. Access each of these by index number. Start with the
