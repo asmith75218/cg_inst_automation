@@ -21,9 +21,15 @@ class Serial_instrument(Instrument):
 		self.ser.baudrate = self.baudrate
 		self.ser.timeout = self.timeout
 		self.port = None
-		self.capfile = "Serial_instrument.log"	# Default should be overridden in instrument-specific module
+		self.capfile = "save/Serial_instrument.log"	# Default should be overridden in instrument-specific module
+		self.echo = False	# Flag to enable printing to user display whatever is written to capfile
 
-
+	def set_timeout(self, t):
+		self.ser.timeout = t
+		
+	def set_baudrate(self, b):
+		self.ser.baudrate = b
+		
 	def set_serialport(self):
 		ports = [port for port in list_ports.comports()]
 		portmenu = ["%s - %s" % (port.device, port.description) for port in ports]
@@ -49,6 +55,7 @@ class Serial_instrument(Instrument):
 					# Cancelled by user...
 					return False
 		try:
+			#print("Setting a %d sec timeout..." % self.ser.timeout)
 			self.ser.open()
 		except BaseException as msg:
 			input("\nError! %s [Press ENTER to continue]..." % msg)
@@ -114,6 +121,8 @@ class Serial_instrument(Instrument):
 		# Append text to a capture file. Pass text to append as lines.
 		with open(self.capfile, 'a') as capfile:
 			capfile.write(lines)
+		if self.echo:
+			print(lines)
 	
 	def buffer_empty(self):
 		# Check for unread bytes in serial input buffer. Returns True of False.
@@ -122,3 +131,11 @@ class Serial_instrument(Instrument):
 		else:
 			return False
 	
+	def rename_capfile(self, dst):
+		# Renames the active capture file. Useful when title is not known at the time
+		# the capture file is first opened. This will silently clobber the destination
+		# file if it already exists.
+		if common.rename_file(self.capfile, dst):
+			return True
+		else:
+			return False

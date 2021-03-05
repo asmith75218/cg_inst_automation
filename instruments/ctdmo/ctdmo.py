@@ -1,13 +1,14 @@
 from common import common
 from common.seabird_common import Seabird_instrument
-from . import retire, qct
+from . import retire, qct, calibration
 
 class Ctdmo(Seabird_instrument):
 	# class variables common to all CTDMO
-	proctypes = ['qct', 'retire']
+	proctypes = ['qct', 'calibration', 'retire']
 	name = "CTDMO"
 	baudrate = 9600
 	class_id = "1336-00001"
+	INVENTORYCSV = "instruments/ctdmo/ctdmo_inv.csv"
 	
 	def __init__(self):
 		# instance variables...
@@ -34,9 +35,48 @@ class Ctdmo(Seabird_instrument):
 		
 	def qct(self):
 		qct.init_qct(self)
+		
+	def calibration(self):
+		calibration.init_calibration(self)
 	# --------------------------
+
+	def init_connection(self):		
+		while not self.connected():
+			if not self.connect():
+				common.usercancelled()
+				return True
+
+		# Establish communication with the IMM...
+		self.imm_poweron()
+		self.imm_cmd("gethd")
+		self.imm_setconfigtype(configtype='1', setenablebinarydata='0')
 	
-	
+		# Establish communication with the instrument...
+		print("Waking the instrument...")
+		self.imm_remote_wakeup()
+ 
+		self.imm_get_remote_id()
+
+		self.imm_cmd('#%soutputexecutedtag=n' % self.remote_id)
+		ds = self.imm_remote_reply('ds').split()
+		self.serialnumber = "37-%s" % ds[5]
+		print("Serial no.: %s" % self.serialnumber)
+
+		self.get_seriesletter()
+		return True
+
+
+	def get_seriesletter(self):
+		# Use serial number to look up series letter from a csv inventory file, then set
+		# part number accordingly...
+		inventory_dict = common.dict_from_csv(self.INVENTORYCSV)
+		try:
+			self.seriesletter = inventory_dict[self.serialnumber]
+		except KeyError:
+			self.seriesletter = common.usertextselection("Enter the instrument Series (G, H, Q or R): ", "GgHhQqRr").upper()
+		self.part_no = "%s-%s" % (self.class_id, common.cgpartno_from_series(self.seriesletter))
+		return True
+
 	def get_time(self):
 		ds = self.imm_remote_reply('ds')
 		ds_date = ' '.join(ds.split()[6:10])
@@ -89,3 +129,11 @@ class Ctdmo(Seabird_instrument):
 			print("The %s value did not increase as expected!" % label)
 			result = False
 		return result
+		
+	def generate_cal_csv(instrument):
+		# Fetch calibration coefficients from instrument (XML format) and pass them on to
+		# the calibration module to export a calibration csv...
+		cc = instrument.imm_remote_reply('getcc')
+		cal_xml = cc[8:-2]
+		calibration.export_csv(cal_xml, instrument)
+    

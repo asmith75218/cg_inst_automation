@@ -2,6 +2,7 @@ from . import userinput
 from datetime import datetime as dt
 from datetime import timedelta
 import csv
+import os
 
 # Dynamic menu
 #
@@ -157,6 +158,14 @@ def dict_from_csv(csvfilename):
 def cgpartno_from_series(series_letter):
 	"""Return the numeric zero-padded part number for a given series letter"""
 	return str(ord(series_letter)-64).rjust(5, '0')
+
+def rename_file(src, dst):
+	try:
+		os.replace(src, dst)
+	except OSError:
+		print("Error saving log file!")
+		return False
+	return True
 	
 # ---------- Time Functions ----------
 #

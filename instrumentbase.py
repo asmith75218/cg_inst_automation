@@ -12,12 +12,9 @@ class Instrument:
 	def __init__(self):
 		pass
 		
-	def explode(self):
-		print("Boom!")
-			
 	def select_proc(self):
 		while True:
-			header = ''.join(("\n", "-" * 17, "INSTRUMENT MENU: %s" % self.name.upper().ljust(7), "-" * 18))
+			header = ''.join(("\n", "-" * 17, " INSTRUMENT MENU: %s " % self.name.upper().ljust(7), "-" * 18))
 			proclist = [proc.upper() for proc in self.proctypes]
 			try:
 				proc_id = int(common.dynamicmenu_get("Select a procedure", proclist, header=header))
