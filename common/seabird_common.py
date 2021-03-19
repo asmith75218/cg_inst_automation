@@ -93,8 +93,8 @@ class Seabird_instrument(Serial_instrument):
 	def imm_set_remote_id(self, ID):
 		i = 0
 		while True:
-			if not self.imm_get_remote_id():
-				return False				
+# 			if not self.imm_get_remote_id():
+# 				return False				
 			if self.remote_id == ID:
 				return True
 			if i:

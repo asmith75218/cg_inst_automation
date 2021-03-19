@@ -50,19 +50,7 @@ class Qct_ctdmo(Qct):
         instrument.capfile = "save/%s-A.txt" % self.header['docname']
 
         # Open a serial (RS232) connection...
-        while not instrument.connected():
-            if not instrument.connect():
-                common.usercancelled()
-                return True
-
-        # Establish communication with the IMM...
-        instrument.imm_poweron()
-        instrument.imm_cmd("gethd")
-        instrument.imm_setconfigtype(configtype='1', setenablebinarydata='0')
-        
-        # ---- 8.3.5 ----
-        print("Waking the instrument...")
-        instrument.imm_remote_wakeup()
+        instrument.init_connection()
 
         # ---- 8.3.6 ----
         print("Establishing communication...")
@@ -75,11 +63,11 @@ class Qct_ctdmo(Qct):
         
         # ---- 8.3.7 ----
         instrument.imm_cmd('#%soutputformat=1' % instrument.remote_id)
-        instrument.imm_cmd('#%soutputexecutedtag=n' % instrument.remote_id)
+        #instrument.imm_cmd('#%soutputexecutedtag=n' % instrument.remote_id)
         ds = instrument.imm_remote_reply('ds').split()
-        instrument.serialnumber = "37-%s" % ds[5]
+        #instrument.serialnumber = "37-%s" % ds[5]
         instrument.firmware = ds[2]
-        print("Serial number: %s" % instrument.serialnumber)
+        #print("Serial number: %s" % instrument.serialnumber)
         print("Firmware version: %s" % instrument.firmware)
 
         # Add step results to test results dictionaries...
@@ -89,16 +77,13 @@ class Qct_ctdmo(Qct):
         self.results_pass['8.3.7b'] = True
 
         # Get series letter and part number...
-        instrument.get_seriesletter()
+        #instrument.get_seriesletter()
         print("Class/Series: CTDMO-%s" % instrument.seriesletter)
         print("Part No.: %s" % instrument.part_no)
         
         # ---- 8.3.8 ----
-        print("Retrieving calibration information...")
-        cc = instrument.imm_remote_reply('getcc')
-
         # Generate the calibration CSV...
-        print("Exporting calibration to CSV...")
+        print("Retrieving calibration information...")
         instrument.cal_source_file = "%s-A_SN_%s_QCT_Results_CTDMO-%s.txt" % (self.header['docname'], instrument.serialnumber, instrument.seriesletter)
         instrument.generate_cal_csv()
         
