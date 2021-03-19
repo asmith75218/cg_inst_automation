@@ -105,8 +105,12 @@ class Serial_instrument(Instrument):
 		return True
 
 	def connect(self):
-		# Wrapper to open a serial connection. Returns True or False.
-		return self.serialport_open()
+		# Wrapper to open a serial connection.
+		while not self.connected():
+			if not self.serialport_open():
+				common.usercancelled()
+				return True
+		return True
 	
 	def connected(self):
 		# Wrapper to test for open serial port. Returns True of False.
