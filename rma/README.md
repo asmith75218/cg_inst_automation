@@ -1,12 +1,13 @@
-## Automate creation of RMA (3305-00900) shipping documents.
+Automate creation of RMA (3305-00900) shipping documents.
 
 ### Usage
 
 Complete the first six columns (**RMA #, Items with Serial #, Vendor, Recovered Platform,
 Return Record Doc, Departure Date**) in the [Instrument Refurbishment Status][refurb-sheet]
-spreadsheet. Copy and paste the values from these columns into the file `refurb_data.txt`,
-replacing any existing contents. Edit the file to remove line breaks, if any, so that each
-line in the spreadsheet takes up exactly one line in the text file.
+spreadsheet. Copy and paste the values from these columns into the file
+`rma/refurb_data.txt`, replacing any existing contents. Edit the file to remove line
+breaks, if any, so that each line in the spreadsheet takes up exactly one line in the text
+file.
 
 One document will be created per each line in the file.
 
