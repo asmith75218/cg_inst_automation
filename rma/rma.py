@@ -16,6 +16,10 @@ def parse_date(text_date):
         return ''
 
 def batch_form_generate():
+    print("Edit the rma/refurb_data.txt document before proceeding!")
+    print("If you need help, see the rma/README.md file for instructions.")
+    input("Press ENTER to continue...")
+    
     username = get_name()
     
     with open('rma/refurb_data.txt', 'r') as rows:
@@ -82,14 +86,11 @@ def batch_form_generate():
 def main():
     while True:
         header = ''.join(("\n", "-" * 19, "RMA AND SHIPPING MENU", "-" * 19))
-        proclist = ["Display HELP file for instructions.", "I know what I'm doing. Generate the docs!"]
+        proclist = ["Create new RMA and Shipping document(s)"]
         try:
             proc_id = int(common.dynamicmenu_get("Select an action", proclist, header=header))
         except TypeError:
             break
-        if proc_id == 0:
-            print("\nSpam!")
-        elif proc_id == 1:
-            batch_form_generate()
-            print("Process complete. Check documents for errors.")
+        batch_form_generate()
+        print("Process complete. Check documents for errors.")
         
