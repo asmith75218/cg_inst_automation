@@ -4,11 +4,18 @@ from . import retire, qct, calibration
 
 class Ctdmo(Seabird_instrument):
     # class variables common to all CTDMO
-    proctypes = ['qct', 'calibration', 'retire']
+    proctypes = ['qct', 'calibration', 'configure']
     name = "CTDMO"
     baudrate = 9600
     class_id = "1336-00001"
     INVENTORYCSV = "instruments/ctdmo/ctdmo_inv.csv"
+    sbe_prefix = "37"
+    
+    # instrument command to display cal coefs...
+    cc = "dc"
+
+    # index of instrument serial number in reply to 'ds' command...
+    sn_idx = 5
     
     def __init__(self):
         # instance variables...
@@ -30,8 +37,8 @@ class Ctdmo(Seabird_instrument):
     
     # these first definitions are for launching available procedures and should
     # match the above proctypes
-    def retire(self):
-        retire.proc_retire(self)
+    def configure(self):
+        self.imm_configure("instruments/ctdmo/ctdmo_configuration.txt")
         
     def qct(self):
         qct.init_qct(self)

@@ -24,6 +24,6 @@ class Userinput:
 		
 		# meanwhile, everything passes
 		return True
-		
+			
 	def valid_textselection(self, validselections):
 		return self.user_response in validselections
