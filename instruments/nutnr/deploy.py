@@ -2,23 +2,11 @@ from common import common
 
 def proc_deploy(instrument):
 	# Specify a capture file...
-	instrument.capfile = "NUTNR_SN_config_%s.txt" % common.formatdate(common.current_utc(), 'filename')
+	instrument.capfile = "save/NUTNR_SN_config_%s.txt" % common.formatdate(common.current_utc(), 'filename')
 
 	# Open a serial (RS232) connection...
-	while not instrument.connected():
-		if not instrument.connect():
-			common.usercancelled()
-			return True
+	instrument.init_connection()
 
-	# Establish communication and get SUNA prompt...
-	print("Establishing communication...")
-	while not instrument.get_prompt():
-		if common.usertryagain("Failed to communicate with instrument."):
-			continue
-		else:
-			common.usercancelled()
-			return True
-			
 	# List current configuration details...
 	print(instrument.get_cfg())
 	
