@@ -11,6 +11,22 @@ class Seabird_instrument(Serial_instrument):
         # Initialize shared Instrument superclass attributes...
         super().__init__()
 
+    def sbe_cmd(self, cmd):
+        """
+        Send a command to an instrument, checking first that it has not timed out, or
+        waking it if it has.
+        """
+        if self.sbe_timedout():
+            self.sbe_get_prompt()
+        return self.cap_cmd(cmd)
+
+    def sbe_get_reply(self, cmd):
+        """
+        Send a command to an instrument and return the reply.
+        """
+        self.cap_cmd(cmd)
+        return self.buf
+
     def sbe_get_prompt(self):
         """
         Wake instrument, check for '>' char in response (recognizes the executed tag or
@@ -40,6 +56,47 @@ class Seabird_instrument(Serial_instrument):
         self.firmware = ds[self.fw_idx]
         self.vbatt = common.dec_str(ds[self.vbatt_idx])
 
+    def sbe_set_ref_configs(self):
+        """
+        Puts an instrument into a known configuration prior to conducting another
+        procedure, i.e. QCT, deployment, etc. Specific configurations are defined in an
+        instrument's specific class definition.
+        """
+        for config in self.ref_configs:
+            self.cap_cmd('%s\n' % config)
+        return True
+
+    def sbe_set_datetime(self, t):
+        return self.cap_cmd('datetime=%s' % t)
+
+    def sbe_get_time(self):
+        ds = self.sbe_get_reply('ds')
+        ds_date = ' '.join(ds.split()[self.dt_idx[0]:self.dt_idx[1]])
+        return common.formatdate(ds_date, '%d %b %Y %H:%M:%S')
+
+    def sbe_clock_set_test(self, margin, conditions=['utc']):
+        for condition in conditions:
+            while True:
+                if condition == 'noon':
+                    print("Setting clock to noon yesterday...")
+                    t1 = common.noon_yesterday()
+                elif condition == 'utc':
+                    print("Setting clock to current time UTC...")
+                    t1 = common.current_utc()
+                self.sbe_set_datetime(common.formatdate(t1, 'sbe')) 
+                t2 = self.sbe_get_time()
+                if common.compare_times_ordered(t1, t2, margin):
+                    break
+                else:
+                    if common.usertryagain("There was a problem setting the clock. The reported time is %s. The expected time is %s" % (common.formatdate(t2, 'us'), common.formatdate(t1, 'us'))):
+                        continue
+                    else:
+                        return False
+        return True
+
+
+    ## Inductive/IMM instrument functions...
+    ##
     def imm_timedout(self):
         if not self.buffer_empty():
             self.cap_buf()

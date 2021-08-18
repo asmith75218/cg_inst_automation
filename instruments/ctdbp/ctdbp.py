@@ -3,8 +3,8 @@ from common.seabird_common import Seabird_instrument
 from . import qct
 
 class Ctdbp(Seabird_instrument):
-    # class variables common to all CTDMO
-    proctypes = ['meet']
+    # class variables common to all CTDBP
+    proctypes = ['qct']
     name = "CTDBP"
     baudrate = 9600
     class_id = "1336-00001"
@@ -17,10 +17,24 @@ class Ctdbp(Seabird_instrument):
     fw_idx = 4
     sn_idx = 7
     vbatt_idx = 14
+    dt_idx = [8,12]
+    
+    # commands to put into baseline "reference" configuration...
+    ref_configs =    [
+                    'OUTPUTEXECUTEDTAG=N',
+                    'ECHO=Y',
+                    'OUTPUTSAL=N',
+                    'OUTPUTSV=N',
+                    'OUTPUTUCSD=N',
+                    'NCYCLES=4',
+                    'PUMPMODE=1',
+                    'OUTPUTFORMAT=3',
+                    'TXREALTIME=Y'
+                    ]
     
     def __init__(self):
         # instance variables...
-        self.timeout = 6
+        self.timeout = 3
                 
         # Initialize shared superclass attributes...
         super().__init__()
@@ -30,7 +44,7 @@ class Ctdbp(Seabird_instrument):
 #     def configure(self):
 #         self.imm_configure("instruments/ctdbpp/ctdbp-p_configuration.txt")
 
-    def meet(self):
+    def qct(self):
         qct.init_qct(self)
 
     # --------------------------

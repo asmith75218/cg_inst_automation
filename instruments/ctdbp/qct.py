@@ -67,9 +67,27 @@ class Qct_ctdbp(Qct):
                         "Battery voltage":instrument.vbatt
                         }
         self.user_confirm_value_no_prompt(self_confirm)
+        # ---- 8.2.2 ----
+        self.results_text['8.2.2'] = "Battery voltage %s V" % instrument.vbatt
+        self.results_pass['8.2.2'] = True
+       
+        # ---- 8.3.6 ----
+        self.results_text['8.3.6'] = "Firmware v%s confirmed." % instrument.firmware
+        self.results_pass['8.3.6'] = True
 
+        # Put instrument into reference config...
+        instrument.sbe_set_ref_configs()
+        
+        # TODO: generate cal file here!
+        # ---- 8.3.5 ----
 
-
+        # ---- 8.3.8 ----
+        print("Testing instrument clock...")
+        self.test_step('8.3.8',
+                        instrument.sbe_clock_set_test(5, ['noon', 'utc']),
+                        'The clock was set successfully.',
+                        'The clock was not set successfully.',
+                        'The instrument clock was not set to the expected time.')
 
 #        # ---- 8.3.6 ----
 #         print("Establishing communication...")
