@@ -26,7 +26,7 @@ class Nutnr(Serial_instrument):
 	def init_connection(self):		
 		self.connect()
 
-		while not instrument.get_prompt():
+		while not self.get_prompt():
 			if common.usertryagain("Failed to communicate with instrument."):
 				continue
 			else:

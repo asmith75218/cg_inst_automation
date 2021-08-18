@@ -11,6 +11,35 @@ class Seabird_instrument(Serial_instrument):
         # Initialize shared Instrument superclass attributes...
         super().__init__()
 
+    def sbe_get_prompt(self):
+        """
+        Wake instrument, check for '>' char in response (recognizes the executed tag or
+        the S prompt...
+        """
+        self.cap_cmd('')
+        if ">" in self.buf:
+            return True
+        else: return False
+
+    def sbe_timedout(self):
+        if not self.buffer_empty():
+            self.cap_buf()
+            if "time out" in self.buf:
+                return True
+        else:
+            return False
+    
+    def sbe_parse_ds(self):
+        """
+        Command an instrument to display its status and then parse out all the most
+        commonly used elements...
+        """
+        print("Introducing the %s..." % self.name)       
+        ds = self.get_cmd('ds').split()
+        self.serialnumber = "%s-%s" % (self.sbe_prefix, ds[self.sn_idx])
+        self.firmware = ds[self.fw_idx]
+        self.vbatt = common.dec_str(ds[self.vbatt_idx])
+
     def imm_timedout(self):
         if not self.buffer_empty():
             self.cap_buf()

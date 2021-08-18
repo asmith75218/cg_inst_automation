@@ -3,6 +3,8 @@ from datetime import datetime as dt
 from datetime import timedelta
 import csv
 import os
+import string
+import re
 
 # Dynamic menu
 #
@@ -235,3 +237,16 @@ def formatdate(t, fmt):
         return t.strftime('%Y%m%d%H%M%S')
     else:
         return dt.strptime(t, fmt)
+
+# ---------- String Functions ----------
+#
+#
+def dec_str(s):
+	"""
+	Return a string, presumably a decimal or integer number, stripped of extraneous chars
+	"""
+	match = re.search('[0-9.]+', s)
+	if match:
+		return match[0]
+	else:
+		return 'NA'
