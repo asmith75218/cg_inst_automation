@@ -163,6 +163,18 @@ def userrange(msg, validrange):
         else:
             print("Invalid entry! Try again.")
 
+# Prompt the user to enter a date and time, with validation. Returns a python datetime
+# object
+def userdatetime(msg):
+	print(msg)
+	yr = userrange("Year (YYYY): ", range(2000, 2100))
+	mo = userrange("Month (MM): ", range(1, 13))
+	dy = userrange("Day (DD): ", range(1, 32))
+	hr = userrange("Hour (0-23): ", range(0, 24))
+	min = userrange("Minute (0-59): ", range(0, 60))
+	sec = userrange("Second (0-59): ", range(0, 60))
+	return dt(yr, mo, dy, hr, min, sec)
+
 def dict_from_csv(csvfilename):
     """
     Import and convert a csv file to a python dictionary. Each line in the csv should

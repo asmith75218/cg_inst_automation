@@ -4,7 +4,7 @@ from . import qct
 
 class Ctdbp(Seabird_instrument):
     # class variables common to all CTDBP
-    proctypes = ['qct']
+    proctypes = ['qct', 'deploy']
     name = "CTDBP"
     baudrate = 9600
     class_id = "1336-00001"
@@ -20,7 +20,7 @@ class Ctdbp(Seabird_instrument):
     dt_idx = [8,12]
     
     # commands to put into baseline "reference" configuration...
-    ref_configs =    [
+    ref_configs =   [
                     'OUTPUTEXECUTEDTAG=N',
                     'ECHO=Y',
                     'OUTPUTSAL=N',
@@ -31,7 +31,17 @@ class Ctdbp(Seabird_instrument):
                     'OUTPUTFORMAT=3',
                     'TXREALTIME=Y'
                     ]
-    
+
+    # deployment configurations (assuming the above reference configuration)...
+    dep_configs =    {
+                    'CP-NSIF':  [
+                                'SAMPLEINTERVAL=10'
+                                ],
+                    'CP-MFN':   [
+                                'SAMPLEINTERVAL=900'
+                                ]
+                    }
+   
     def __init__(self):
         # instance variables...
         self.timeout = 3
@@ -46,6 +56,9 @@ class Ctdbp(Seabird_instrument):
 
     def qct(self):
         qct.init_qct(self)
+        
+    def deploy(self):
+        self.sbe_deploy()
 
     # --------------------------
 

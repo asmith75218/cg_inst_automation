@@ -45,6 +45,23 @@ class Seabird_instrument(Serial_instrument):
         else:
             return False
     
+    def sbe_connect(self):
+        # Open a serial (RS232) connection...
+        self.connect()
+
+        # Get a prompt to confirm connection...
+        while not self.sbe_get_prompt():
+            if common.usertryagain("Failed to communicate with instrument."):
+                continue
+            else:
+                common.usercancelled()
+                return False
+
+        # Send and parse a 'ds' command. Parsing paramaters must be set when instrument
+        # class is instantiated...
+        self.sbe_parse_ds()
+        return True
+
     def sbe_parse_ds(self):
         """
         Command an instrument to display its status and then parse out all the most
@@ -68,6 +85,9 @@ class Seabird_instrument(Serial_instrument):
 
     def sbe_set_datetime(self, t):
         return self.cap_cmd('datetime=%s' % t)
+
+    def sbe_set_startdatetime(self, t):
+        return self.cap_cmd('startdatetime=%s' % t)
 
     def sbe_get_time(self):
         ds = self.sbe_get_reply('ds')
@@ -94,6 +114,8 @@ class Seabird_instrument(Serial_instrument):
                         return False
         return True
 
+    def sbe_deploy(self):
+        seabird_configure.init_deploy(self)
 
     ## Inductive/IMM instrument functions...
     ##
