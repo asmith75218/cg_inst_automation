@@ -41,6 +41,14 @@ class Ctdbp(Seabird_instrument):
                                 'SAMPLEINTERVAL=900'
                                 ]
                     }
+    
+    # lookup table for instruments with non-standard serial numbers...
+    non_std_sn =    {
+                    '6841':'16P64183-6841',
+                    '7208':'16P71174-7208',
+                    '7209':'16P71174-7209',
+                    '7239':'16P71879-7239'
+                    }
    
     def __init__(self):
         # instance variables...
