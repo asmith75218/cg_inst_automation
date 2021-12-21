@@ -16,6 +16,8 @@ def parse_date(text_date):
         return ''
 
 def batch_form_generate():
+    template = 'templates/3305-00900-v103.docx'
+    
     print("Edit the rma/refurb_data.txt document before proceeding!")
     print("If you need help, see the rma/README.md file for instructions.")
     input("Press ENTER to continue...")
@@ -34,7 +36,7 @@ def batch_form_generate():
             departure_date = parse_date(cells[6].strip())
 
 
-            doc = Document('templates/3305-00900-00000.docx')
+            doc = Document(template)
             table = doc.tables[0]
 
             cell = table.rows[1].cells[0]

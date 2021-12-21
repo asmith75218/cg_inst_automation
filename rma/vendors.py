@@ -7,6 +7,7 @@ contacts = {'Aanderaa':"ysi.repairs@xyleminc.com",
             'Pro-Oceanus':"admin@pro-oceanus.com",
             'Satlantic':"service@seabird.com",
             'Seabird':"service@seabird.com",
+            'Sea Bird':"service@seabird.com",
             'Sunburst':"techsupport@sunburst.com",
             'Teledyne RDI':"rdi.csadmin@teledyne.com",
             'Wet Labs':"service@wetlabs.com"}
